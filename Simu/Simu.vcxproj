@@ -111,6 +111,10 @@
       <AdditionalLibraryDirectories>C:\Users\Andreé Torres\Desktop\SFML-2.6.2-windows-vc15-64-bit\SFML-2.6.2\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>cd /d "$(ProjectDir)resources" &amp;&amp; xcopy /Y /I /Q *.ttf "$(OutDir)" &amp;&amp; xcopy /Y /I /Q *.dll "$(OutDir)" &amp;&amp; xcopy /Y /I /Q *.json "$(OutDir)"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -129,6 +133,10 @@
       <AdditionalLibraryDirectories>C:\Users\Andreé Torres\Desktop\SFML-2.6.2-windows-vc15-64-bit\SFML-2.6.2\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>cd /d "$(ProjectDir)resources" &amp;&amp; xcopy /Y /I /Q *.ttf "$(OutDir)" &amp;&amp; xcopy /Y /I /Q *.dll "$(OutDir)" &amp;&amp; xcopy /Y /I /Q *.json "$(OutDir)"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

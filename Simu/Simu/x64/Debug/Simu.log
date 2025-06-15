@@ -1,0 +1,4 @@
+﻿  main.cpp
+C:\Users\Andreé Torres\Desktop\Simu\main.cpp(131,19): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\Andreé Torres\Desktop\Simu\main.cpp(132,19): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+  Simu.vcxproj -> C:\Users\Andreé Torres\Desktop\Simu\x64\Debug\Simu.exe

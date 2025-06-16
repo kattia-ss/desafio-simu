@@ -30,18 +30,33 @@ float heuristic(int r1, int c1, int r2, int c2) {
     return abs(r1 - r2) + abs(c1 - c2); // hex-friendly Manhattan
 }
 
-vector<pair<int, int>> getNeighbors(int row, int col, int maxRows, int maxCols) {
+vector<pair<int, int>> getHexNeighbors(int row, int col, int maxRows, int maxCols) {
     vector<pair<int, int>> neighbors;
-    vector<pair<int, int>> offsets = { {-1,0}, {1,0}, {0,-1}, {0,1}, {-1,1}, {1,-1} };
-    for (auto offset : offsets) {
-        int dr = offset.first;
-        int dc = offset.second;
-        int nr = row + dr, nc = col + dc;
-        if (nr >= 0 && nr < maxRows && nc >= 0 && nc < maxCols)
+
+    static const pair<int, int> evenOffsets[6] = {
+        {-1,  0}, {-1, +1}, { 0, -1},
+        { 0, +1}, {+1,  0}, {+1, +1}
+    };
+
+    static const pair<int, int> oddOffsets[6] = {
+        {-1, -1}, {-1,  0}, { 0, -1},
+        { 0, +1}, {+1, -1}, {+1,  0}
+    };
+
+    const pair<int, int>* offsets = (row % 2 == 0) ? evenOffsets : oddOffsets;
+
+    for (int i = 0; i < 6; ++i) {
+        int nr = row + offsets[i].first;
+        int nc = col + offsets[i].second;
+
+        if (nr >= 0 && nr < maxRows && nc >= 0 && nc < maxCols) {
             neighbors.emplace_back(nr, nc);
+        }
     }
+
     return neighbors;
 }
+
 
 vector<pair<int, int>> findPathAStar(vector<vector<HexagonCell>>& grid, int startR, int startC, int goalR, int goalC) {
     int rows = grid.size(), cols = grid[0].size();
@@ -69,7 +84,7 @@ vector<pair<int, int>> findPathAStar(vector<vector<HexagonCell>>& grid, int star
 
         closed[current.row][current.col] = true;
 
-        for (auto it : getNeighbors(current.row, current.col, rows, cols)) {
+        for (auto it : getHexNeighbors(current.row, current.col, rows, cols)){
             int nr = it.first;
             int nc = it.second;
             if (closed[nr][nc] || grid[nr][nc].isWall || grid[nr][nc].isFlooded) continue;
@@ -151,6 +166,8 @@ int main() {
     int score = INITIAL_SCORE, energy = 0;
     bool wallBreakUsed = false;
     vector<pair<int, int>> currentPath;
+    pair<int, int> lastMoveDir = { 0, 0 }; 
+
 
     while (window.isOpen()) {
         Event event;
@@ -167,10 +184,40 @@ int main() {
                 }
 
                 int newRow = player.row, newCol = player.col;
-                if (event.key.code == Keyboard::W) newRow--;
-                if (event.key.code == Keyboard::S) newRow++;
-                if (event.key.code == Keyboard::A) newCol--;
-                if (event.key.code == Keyboard::D) newCol++;
+                bool isOdd = player.row % 2 != 0;
+
+                if (event.key.code == Keyboard::W) {
+                    newRow = player.row - 1;
+                    newCol = isOdd ? player.col : player.col - 1;
+                    lastMoveDir = make_pair(-1, isOdd ? 0 : -1);
+                }
+                else if (event.key.code == Keyboard::E) {
+                    newRow = player.row - 1;
+                    newCol = isOdd ? player.col + 1 : player.col;
+                    lastMoveDir = make_pair(-1, isOdd ? 1 : 0);
+                }
+                else if (event.key.code == Keyboard::A) {
+                    newRow = player.row;
+                    newCol = player.col - 1;
+                    lastMoveDir = make_pair(0, -1);
+                }
+                else if (event.key.code == Keyboard::D) {
+                    newRow = player.row;
+                    newCol = player.col + 1;
+                    lastMoveDir = make_pair(0, 1);
+                }
+                else if (event.key.code == Keyboard::Z) {
+                    newRow = player.row + 1;
+                    newCol = isOdd ? player.col : player.col - 1;
+                    lastMoveDir = make_pair(1, isOdd ? 0 : -1);
+                }
+                else if (event.key.code == Keyboard::X) {
+                    newRow = player.row + 1;
+                    newCol = isOdd ? player.col + 1 : player.col;
+                    lastMoveDir = make_pair(1, isOdd ? 1 : 0);
+                }
+
+
 
                 if (newRow >= 0 && newRow < GRID_ROWS &&
                     newCol >= 0 && newCol < GRID_COLS &&
@@ -197,21 +244,22 @@ int main() {
                     }
                 }
 
-                if (event.key.code == Keyboard::E && energy == MAX_ENERGY && !wallBreakUsed) {
-                    vector<pair<int, int>> dirs = { {-1,0}, {1,0}, {0,-1}, {0,1} };
-                    for (auto it : dirs) {
-                        int dr = it.first;
-                        int dc = it.second;
-                        int nr = player.row + dr, nc = player.col + dc;
-                        if (nr >= 0 && nr < GRID_ROWS && nc >= 0 && nc < GRID_COLS && grid[nr][nc].isWall) {
-                            grid[nr][nc].isWall = false;
-                            grid[nr][nc].setFillColor(Color::White);
-                            wallBreakUsed = true;
-                            energy = 0;
-                            break;
-                        }
+                if (event.key.code == Keyboard::R && energy == MAX_ENERGY && !wallBreakUsed) {
+                    int nr = player.row + lastMoveDir.first;
+                    int nc = player.col + lastMoveDir.second;
+
+                    if (nr >= 0 && nr < GRID_ROWS &&
+                        nc >= 0 && nc < GRID_COLS &&
+                        grid[nr][nc].isWall) {
+
+                        grid[nr][nc].isWall = false;
+                        grid[nr][nc].setFillColor(Color::White);
+                        wallBreakUsed = true;
+                        energy = 0;
                     }
                 }
+
+
             }
 
             if (event.type == Event::Closed ||

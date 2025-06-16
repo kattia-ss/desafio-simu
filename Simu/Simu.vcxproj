@@ -139,10 +139,16 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameConstants.h" />
+    <ClCompile Include="HexagonCell.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MapLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HexagonCell.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="MapLoader.h" />
+    <ClInclude Include="Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

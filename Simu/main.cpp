@@ -5,6 +5,9 @@
 #include <queue>
 #include <cmath>
 #include <algorithm>
+#include <functional>
+#include <unordered_set>
+#include <unordered_map>
 
 #include "GameConstants.h"
 #include "HexagonCell.h"
@@ -26,24 +29,43 @@ struct Node {
     }
 };
 
+// Función hash para pair<int,int> para usar en unordered_set
+struct PairHash {
+    size_t operator()(const pair<int, int>& p) const {
+        return hash<int>()(p.first) ^ (hash<int>()(p.second) << 1);
+    }
+};
+
+// Heurística mejorada para hexágonos
 float heuristic(int r1, int c1, int r2, int c2) {
-    return abs(r1 - r2) + abs(c1 - c2); // hex-friendly Manhattan
+    // Convertir coordenadas de hexágono a coordenadas cúbicas para mejor cálculo
+    // Esta es una aproximación más precisa para hexágonos
+    float x1 = c1 - (r1 - (r1 & 1)) / 2.0f;
+    float z1 = r1;
+    float y1 = -x1 - z1;
+
+    float x2 = c2 - (r2 - (r2 & 1)) / 2.0f;
+    float z2 = r2;
+    float y2 = -x2 - z2;
+
+    return (abs(x1 - x2) + abs(y1 - y2) + abs(z1 - z2)) / 2.0f;
 }
 
 vector<pair<int, int>> getHexNeighbors(int row, int col, int maxRows, int maxCols) {
     vector<pair<int, int>> neighbors;
 
-    static const pair<int, int> evenOffsets[6] = {
-        {-1,  0}, {-1, +1}, { 0, -1},
-        { 0, +1}, {+1,  0}, {+1, +1}
+    // Corregir los offsets para hexágonos - el problema principal estaba aquí
+    static const pair<int, int> evenRowOffsets[6] = {
+        {-1, -1}, {-1,  0}, { 0, -1},  // arriba-izq, arriba-der, izquierda
+        { 0, +1}, {+1, -1}, {+1,  0}   // derecha, abajo-izq, abajo-der
     };
 
-    static const pair<int, int> oddOffsets[6] = {
-        {-1, -1}, {-1,  0}, { 0, -1},
-        { 0, +1}, {+1, -1}, {+1,  0}
+    static const pair<int, int> oddRowOffsets[6] = {
+        {-1,  0}, {-1, +1}, { 0, -1},  // arriba-izq, arriba-der, izquierda
+        { 0, +1}, {+1,  0}, {+1, +1}   // derecha, abajo-izq, abajo-der
     };
 
-    const pair<int, int>* offsets = (row % 2 == 0) ? evenOffsets : oddOffsets;
+    const pair<int, int>* offsets = (row % 2 == 0) ? evenRowOffsets : oddRowOffsets;
 
     for (int i = 0; i < 6; ++i) {
         int nr = row + offsets[i].first;
@@ -57,54 +79,98 @@ vector<pair<int, int>> getHexNeighbors(int row, int col, int maxRows, int maxCol
     return neighbors;
 }
 
-
 vector<pair<int, int>> findPathAStar(vector<vector<HexagonCell>>& grid, int startR, int startC, int goalR, int goalC) {
     int rows = grid.size(), cols = grid[0].size();
-    priority_queue<Node, vector<Node>, greater<Node>> openSet;
-    vector<vector<bool>> closed(rows, vector<bool>(cols, false));
-    vector<vector<Node*>> nodes(rows, vector<Node*>(cols, nullptr));
+
+    // Usar unordered_set para mejor performance
+    unordered_set<pair<int, int>, PairHash> closedSet;
+    unordered_map<pair<int, int>, Node*, PairHash> allNodes;
+
+    priority_queue<Node*, vector<Node*>, function<bool(Node*, Node*)>> openSet(
+        [](Node* a, Node* b) { return a->fCost() > b->fCost(); }
+    );
 
     Node* start = new Node{ startR, startC, 0, heuristic(startR, startC, goalR, goalC), nullptr };
-    openSet.push(*start);
-    nodes[startR][startC] = start;
+    openSet.push(start);
+    allNodes[{startR, startC}] = start;
 
     while (!openSet.empty()) {
-        Node current = openSet.top(); openSet.pop();
+        Node* current = openSet.top();
+        openSet.pop();
 
-        if (current.row == goalR && current.col == goalC) {
+        pair<int, int> currentPos = { current->row, current->col };
+
+        // Si ya procesamos este nodo, continuar
+        if (closedSet.count(currentPos)) {
+            continue;
+        }
+
+        // Marcar como procesado
+        closedSet.insert(currentPos);
+
+        // ¿Llegamos al objetivo?
+        if (current->row == goalR && current->col == goalC) {
             vector<pair<int, int>> path;
-            Node* n = nodes[goalR][goalC];
+            Node* n = current;
             while (n) {
                 path.emplace_back(n->row, n->col);
                 n = n->parent;
             }
             reverse(path.begin(), path.end());
+
+            // Limpiar memoria
+            for (auto& nodePair : allNodes) {
+                delete nodePair.second;
+            }
+
             return path;
         }
 
-        closed[current.row][current.col] = true;
+        // Explorar vecinos
+        for (auto neighbor : getHexNeighbors(current->row, current->col, rows, cols)) {
+            int nr = neighbor.first;
+            int nc = neighbor.second;
+            pair<int, int> neighborPos = { nr, nc };
 
-        for (auto it : getHexNeighbors(current.row, current.col, rows, cols)){
-            int nr = it.first;
-            int nc = it.second;
-            if (closed[nr][nc] || grid[nr][nc].isWall || grid[nr][nc].isFlooded) continue;
+            // Saltar si ya está en el conjunto cerrado
+            if (closedSet.count(neighborPos)) continue;
 
-            float gCost = current.gCost + 1;
-            float hCost = heuristic(nr, nc, goalR, goalC);
+            // Saltar si es una pared o está inundado
+            if (grid[nr][nc].isWall || grid[nr][nc].isFlooded) continue;
 
-            if (!nodes[nr][nc] || gCost < nodes[nr][nc]->gCost) {
-                Node* neighbor = new Node{ nr, nc, gCost, hCost, nodes[current.row][current.col] };
-                nodes[nr][nc] = neighbor;
-                openSet.push(*neighbor);
+            float tentativeGCost = current->gCost + 1;
+
+            // Si no hemos visto este nodo antes, o encontramos un camino mejor
+            if (allNodes.find(neighborPos) == allNodes.end() ||
+                tentativeGCost < allNodes[neighborPos]->gCost) {
+
+                Node* neighborNode;
+                if (allNodes.find(neighborPos) == allNodes.end()) {
+                    neighborNode = new Node{ nr, nc, tentativeGCost,
+                                          heuristic(nr, nc, goalR, goalC), current };
+                    allNodes[neighborPos] = neighborNode;
+                }
+                else {
+                    neighborNode = allNodes[neighborPos];
+                    neighborNode->gCost = tentativeGCost;
+                    neighborNode->parent = current;
+                }
+
+                openSet.push(neighborNode);
             }
         }
     }
 
-    return {};
+    // Limpiar memoria si no se encontró camino
+    for (auto& nodePair : allNodes) {
+        delete nodePair.second;
+    }
+
+    return {}; // No se encontró camino
 }
 
 int main() {
-    RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Templo - A* Pathfinding");
+    RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Templo - A* Pathfinding Fixed");
     window.setFramerateLimit(60);
 
     RectangleShape energyBarBack(Vector2f(120, 12));
@@ -144,17 +210,22 @@ int main() {
     float offsetX = (WINDOW_WIDTH - totalGridWidth) / 2.f;
     float offsetY = (WINDOW_HEIGHT - totalGridHeight) / 2.f;
 
+    // Guardar colores originales para restaurar después
+    vector<vector<Color>> originalColors(GRID_ROWS, vector<Color>(GRID_COLS));
     for (int r = 0; r < GRID_ROWS; ++r) {
         for (int c = 0; c < GRID_COLS; ++c) {
             grid[r][c].setScreenPosition(c, r, offsetX, offsetY);
 
-            // Colorear hexágonos según su altura para mostrar los niveles visualmente
             if (!grid[r][c].isWall && !grid[r][c].isStart && !grid[r][c].isGoal && !grid[r][c].isItem) {
                 int height = grid[r][c].height;
-                // Gradiente de verde claro a verde oscuro según la altura
-                int greenValue = 100 + (height * 30); // Más altura = más verde
+                int greenValue = 100 + (height * 30);
                 if (greenValue > 255) greenValue = 255;
-                grid[r][c].setFillColor(Color(50, greenValue, 50));
+                Color cellColor = Color(50, greenValue, 50);
+                grid[r][c].setFillColor(cellColor);
+                originalColors[r][c] = cellColor;
+            }
+            else {
+                originalColors[r][c] = grid[r][c].getFillColor();
             }
         }
     }
@@ -166,58 +237,157 @@ int main() {
     int score = INITIAL_SCORE, energy = 0;
     bool wallBreakUsed = false;
     vector<pair<int, int>> currentPath;
-    pair<int, int> lastMoveDir = { 0, 0 }; 
+    pair<int, int> lastMoveDir = { 0, 0 };
 
+    // Mostrar puntuación inicial
+    cout << "=== TEMPLO - JUEGO INICIADO ===" << endl;
+    cout << "Puntuación inicial: " << score << " puntos" << endl;
+    cout << "Presiona F para mostrar el camino A*" << endl;
+    cout << "===============================" << endl;
+
+    // Intentar cargar la fuente - CORREGIDO
+    Font font;
+    bool fontLoaded = false;
+
+    // Intentar múltiples rutas de fuentes comunes
+    vector<string> fontPaths = {
+        "arial.ttf",
+        "C:/Windows/Fonts/arial.ttf",
+        "C:/Windows/Fonts/calibri.ttf",
+        "/System/Library/Fonts/Arial.ttf", // macOS
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", // Linux
+        "assets/fonts/arial.ttf" // Carpeta local del proyecto
+    };
+
+    for (const string& fontPath : fontPaths) {
+        if (font.loadFromFile(fontPath)) {
+            fontLoaded = true;
+            cout << "Fuente cargada desde: " << fontPath << endl;
+            break;
+        }
+    }
+
+    if (!fontLoaded) {
+        cout << "Advertencia: No se pudo cargar ninguna fuente. El texto no se mostrará." << endl;
+    }
+
+    // Crear textos solo si la fuente se cargó correctamente
+    Text scoreText, visitedText, energyText, positionText, pathText, timeText, instructionsText;
+    Clock gameClock; // Para mostrar tiempo transcurrido
+
+    if (fontLoaded) {
+        // Configurar texto de puntuación
+        scoreText.setFont(font);
+        scoreText.setCharacterSize(20);
+        scoreText.setFillColor(Color::White);
+        scoreText.setPosition(10, 30);
+
+        // Configurar texto de celdas visitadas
+        visitedText.setFont(font);
+        visitedText.setCharacterSize(16);
+        visitedText.setFillColor(Color(200, 200, 200));
+        visitedText.setPosition(10, 55);
+
+        // Configurar texto de energía
+        energyText.setFont(font);
+        energyText.setCharacterSize(16);
+        energyText.setFillColor(Color(0, 200, 255));
+        energyText.setPosition(140, 8);
+
+        // Configurar texto de posición actual
+        positionText.setFont(font);
+        positionText.setCharacterSize(14);
+        positionText.setFillColor(Color(255, 255, 0));
+        positionText.setPosition(10, 80);
+
+        // Configurar texto de información del camino
+        pathText.setFont(font);
+        pathText.setCharacterSize(14);
+        pathText.setFillColor(Color(255, 165, 0));
+        pathText.setPosition(10, 100);
+
+        // Configurar texto de tiempo
+        timeText.setFont(font);
+        timeText.setCharacterSize(14);
+        timeText.setFillColor(Color(150, 255, 150));
+        timeText.setPosition(10, 120);
+
+        // Configurar texto de instrucciones
+        instructionsText.setFont(font);
+        instructionsText.setCharacterSize(12);
+        instructionsText.setFillColor(Color(180, 180, 180));
+        instructionsText.setPosition(10, WINDOW_HEIGHT - 60);
+        instructionsText.setString("Controles: W/E (arriba), A/D (izq/der), Z/X (abajo)\nF: Mostrar ruta A* | R: Romper muro (energia completa)\nESC: Salir");
+    }
 
     while (window.isOpen()) {
         Event event;
         while (window.pollEvent(event)) {
             if (event.type == Event::KeyPressed) {
                 if (event.key.code == Keyboard::F) {
+                    // Restaurar colores originales
+                    for (int r = 0; r < GRID_ROWS; ++r) {
+                        for (int c = 0; c < GRID_COLS; ++c) {
+                            if (!grid[r][c].isFlooded) {
+                                grid[r][c].setFillColor(originalColors[r][c]);
+                            }
+                        }
+                    }
+
+                    // Encontrar objetivo y calcular ruta
                     for (int r = 0; r < GRID_ROWS; ++r) {
                         for (int c = 0; c < GRID_COLS; ++c) {
                             if (grid[r][c].isGoal) {
                                 currentPath = findPathAStar(grid, player.row, player.col, r, c);
+                                if (!currentPath.empty()) {
+                                    cout << "???  RUTA A* CALCULADA:" << endl;
+                                    cout << "   Longitud del camino: " << currentPath.size() << " pasos" << endl;
+                                    cout << "   Puntuación actual: " << score << " puntos" << endl;
+                                    cout << "   Celdas visitadas: " << visited.size() << endl;
+                                }
+                                else {
+                                    cout << "? No se encontró ruta al objetivo!" << endl;
+                                }
+                                break;
                             }
                         }
                     }
                 }
 
+                // Movimiento del jugador con offsets corregidos
                 int newRow = player.row, newCol = player.col;
-                bool isOdd = player.row % 2 != 0;
+                bool isEvenRow = player.row % 2 == 0;
 
-                if (event.key.code == Keyboard::W) {
+                if (event.key.code == Keyboard::W) {      // Arriba-izquierda
                     newRow = player.row - 1;
-                    newCol = isOdd ? player.col : player.col - 1;
-                    lastMoveDir = make_pair(-1, isOdd ? 0 : -1);
+                    newCol = isEvenRow ? player.col - 1 : player.col;
+                    lastMoveDir = make_pair(-1, isEvenRow ? -1 : 0);
                 }
-                else if (event.key.code == Keyboard::E) {
+                else if (event.key.code == Keyboard::E) { // Arriba-derecha
                     newRow = player.row - 1;
-                    newCol = isOdd ? player.col + 1 : player.col;
-                    lastMoveDir = make_pair(-1, isOdd ? 1 : 0);
+                    newCol = isEvenRow ? player.col : player.col + 1;
+                    lastMoveDir = make_pair(-1, isEvenRow ? 0 : 1);
                 }
-                else if (event.key.code == Keyboard::A) {
+                else if (event.key.code == Keyboard::A) { // Izquierda
                     newRow = player.row;
                     newCol = player.col - 1;
                     lastMoveDir = make_pair(0, -1);
                 }
-                else if (event.key.code == Keyboard::D) {
+                else if (event.key.code == Keyboard::D) { // Derecha
                     newRow = player.row;
                     newCol = player.col + 1;
                     lastMoveDir = make_pair(0, 1);
                 }
-                else if (event.key.code == Keyboard::Z) {
+                else if (event.key.code == Keyboard::Z) { // Abajo-izquierda
                     newRow = player.row + 1;
-                    newCol = isOdd ? player.col : player.col - 1;
-                    lastMoveDir = make_pair(1, isOdd ? 0 : -1);
+                    newCol = isEvenRow ? player.col - 1 : player.col;
+                    lastMoveDir = make_pair(1, isEvenRow ? -1 : 0);
                 }
-                else if (event.key.code == Keyboard::X) {
+                else if (event.key.code == Keyboard::X) { // Abajo-derecha
                     newRow = player.row + 1;
-                    newCol = isOdd ? player.col + 1 : player.col;
-                    lastMoveDir = make_pair(1, isOdd ? 1 : 0);
+                    newCol = isEvenRow ? player.col : player.col + 1;
+                    lastMoveDir = make_pair(1, isEvenRow ? 0 : 1);
                 }
-
-
 
                 if (newRow >= 0 && newRow < GRID_ROWS &&
                     newCol >= 0 && newCol < GRID_COLS &&
@@ -225,21 +395,40 @@ int main() {
                     !grid[newRow][newCol].isFlooded) {
 
                     pair<int, int> target = { newRow, newCol };
-                    if (!visited.insert(target).second) score -= BACKTRACK_PENALTY;
-                    else energy = min(energy + 1, MAX_ENERGY);
 
+                    // Verificar si es backtracking (visitando una celda ya visitada)
+                    bool isBacktrack = visited.find(target) != visited.end();
+
+                    if (isBacktrack) {
+                        score -= BACKTRACK_PENALTY;
+                        cout << "?? BACKTRACKING! Penalización: -" << BACKTRACK_PENALTY
+                            << " puntos. Puntuación actual: " << score << endl;
+                    }
+                    else {
+                        visited.insert(target);
+                        energy = min(energy + 1, MAX_ENERGY);
+                        cout << "? Nueva casilla explorada! Energía: +" << 1
+                            << " Puntuación: " << score << endl;
+                    }
+
+                    // Verificar si recogió un item
                     if (grid[newRow][newCol].isItem && !grid[newRow][newCol].itemCollected) {
                         score += 100;
                         grid[newRow][newCol].itemCollected = true;
                         grid[newRow][newCol].isItem = false;
                         grid[newRow][newCol].setFillColor(Color::White);
+                        cout << "?? ¡ITEM RECOGIDO! +100 puntos. Puntuación: " << score << endl;
                     }
 
                     player.row = newRow;
                     player.col = newCol;
 
                     if (grid[newRow][newCol].isGoal) {
-                        cout << "¡Ganaste! Puntaje final: " << score << "\n";
+                        cout << "\n?? ¡GANASTE! ??" << endl;
+                        cout << "Puntuación final: " << score << " puntos" << endl;
+                        cout << "Celdas visitadas: " << visited.size() << endl;
+                        cout << "Eficiencia: " << (visited.size() > 0 ? (float)score / visited.size() : 0)
+                            << " puntos por celda" << endl;
                         window.close();
                     }
                 }
@@ -256,10 +445,9 @@ int main() {
                         grid[nr][nc].setFillColor(Color::White);
                         wallBreakUsed = true;
                         energy = 0;
+                        cout << "?? ¡MURO DESTRUIDO! Energía gastada. Puntuación: " << score << endl;
                     }
                 }
-
-
             }
 
             if (event.type == Event::Closed ||
@@ -268,11 +456,11 @@ int main() {
             }
         }
 
+        // Sistema de inundación
         if (waterClock.getElapsedTime().asSeconds() > WATER_STEP_INTERVAL) {
             static int waterLevel = -1;
             waterLevel++;
 
-            // Encontrar la altura máxima del objetivo (hexágono rojo) para que sea el último en inundarse
             int maxGoalHeight = -1;
             for (int r = 0; r < GRID_ROWS; ++r) {
                 for (int c = 0; c < GRID_COLS; ++c) {
@@ -284,12 +472,10 @@ int main() {
 
             for (int r = 0; r < GRID_ROWS; ++r) {
                 for (int c = 0; c < GRID_COLS; ++c) {
-                    // No inundar muros ni el objetivo (hexágono rojo) hasta el final
                     if (!grid[r][c].isWall && !grid[r][c].isGoal && grid[r][c].height <= waterLevel) {
                         grid[r][c].isFlooded = true;
                         grid[r][c].setFillColor(Color(100, 100, 255, 150));
                     }
-                    // Solo inundar el objetivo si el agua ha alcanzado su altura máxima + margen extra
                     else if (grid[r][c].isGoal && waterLevel > maxGoalHeight + 2) {
                         grid[r][c].isFlooded = true;
                         grid[r][c].setFillColor(Color(100, 100, 255, 150));
@@ -300,34 +486,98 @@ int main() {
         }
 
         if (grid[player.row][player.col].isFlooded) {
-            cout << "Te ahogaste. Puntaje final: " << score << "\n";
+            cout << "\n?? TE AHOGASTE! ??" << endl;
+            cout << "Puntuación final: " << score << " puntos" << endl;
+            cout << "Celdas visitadas: " << visited.size() << endl;
+            cout << "Causa: El agua te alcanzó" << endl;
             window.close();
         }
 
         window.clear(Color(60, 60, 60));
 
-        for (auto it : currentPath) {
-            int r = it.first;
-            int c = it.second;
-            if (!grid[r][c].isStart && !grid[r][c].isGoal)
-                grid[r][c].setFillColor(Color(255, 165, 0)); // Naranja
-        }
-
+        // Dibujar la cuadrícula primero
         for (int r = 0; r < GRID_ROWS; ++r) {
             for (int c = 0; c < GRID_COLS; ++c) {
                 window.draw(grid[r][c]);
             }
         }
 
+        // Colorear la ruta después de dibujar la cuadrícula
+        for (size_t i = 0; i < currentPath.size(); ++i) {
+            int r = currentPath[i].first;
+            int c = currentPath[i].second;
+
+            // No colorear el inicio y el objetivo
+            if (!grid[r][c].isStart && !grid[r][c].isGoal && !grid[r][c].isFlooded) {
+                // Crear un hexágono temporal para la ruta
+                HexagonCell pathCell = grid[r][c];
+                pathCell.setFillColor(Color(255, 165, 0, 180)); // Naranja semitransparente
+                window.draw(pathCell);
+            }
+        }
+
+        // Dibujar el jugador
         CircleShape highlight(HEX_RADIUS / 2.f, 6);
         highlight.setFillColor(Color(50, 100, 255, 180));
         highlight.setOrigin(highlight.getRadius(), highlight.getRadius());
         highlight.setPosition(grid[player.row][player.col].getPosition());
         window.draw(highlight);
 
+        // Dibujar la barra de energía
         energyBarFill.setSize(Vector2f(120 * (static_cast<float>(energy) / MAX_ENERGY), 12));
         window.draw(energyBarBack);
         window.draw(energyBarFill);
+
+        // Actualizar y dibujar textos de información solo si la fuente se cargó
+        if (fontLoaded) {
+            // Actualizar textos con información en tiempo real
+            scoreText.setString("Puntuacion: " + to_string(score));
+            visitedText.setString("Celdas visitadas: " + to_string(visited.size()));
+            energyText.setString("Energia: " + to_string(energy) + "/" + to_string(MAX_ENERGY));
+            positionText.setString("Posicion: (" + to_string(player.row) + ", " + to_string(player.col) + ")");
+
+            // Información del camino A*
+            if (!currentPath.empty()) {
+                pathText.setString("Ruta A*: " + to_string(currentPath.size()) + " pasos calculados");
+            }
+            else {
+                pathText.setString("Ruta A*: No calculada (presiona F)");
+            }
+
+            // Tiempo transcurrido
+            int timeElapsed = static_cast<int>(gameClock.getElapsedTime().asSeconds());
+            int minutes = timeElapsed / 60;
+            int seconds = timeElapsed % 60;
+            timeText.setString("Tiempo: " + to_string(minutes) + ":" +
+                (seconds < 10 ? "0" : "") + to_string(seconds));
+
+            // Dibujar todos los textos
+            window.draw(scoreText);
+            window.draw(visitedText);
+            window.draw(energyText);
+            window.draw(positionText);
+            window.draw(pathText);
+            window.draw(timeText);
+            window.draw(instructionsText);
+
+            // Información adicional en la esquina superior derecha
+            Text statusText;
+            statusText.setFont(font);
+            statusText.setCharacterSize(12);
+            statusText.setFillColor(Color(200, 200, 255));
+            statusText.setPosition(WINDOW_WIDTH - 200, 10);
+
+            string statusInfo = "Estado del juego:\n";
+            statusInfo += "Muro roto: " + string(wallBreakUsed ? "SI" : "NO") + "\n";
+            statusInfo += "Nivel agua: " + to_string(static_cast<int>(waterClock.getElapsedTime().asSeconds() / WATER_STEP_INTERVAL)) + "\n";
+
+            // Calcular eficiencia
+            float efficiency = visited.size() > 0 ? (float)score / visited.size() : 0;
+            statusInfo += "Eficiencia: " + to_string(static_cast<int>(efficiency)) + " pts/celda";
+
+            statusText.setString(statusInfo);
+            window.draw(statusText);
+        }
 
         window.display();
     }

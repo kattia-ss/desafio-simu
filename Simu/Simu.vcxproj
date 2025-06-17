@@ -141,7 +141,10 @@
   <ItemGroup>
     <ClCompile Include="GameConstants.h" />
     <ClCompile Include="HexagonCell.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="main.cpp">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </DeploymentContent>
+    </ClCompile>
     <ClCompile Include="MapLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +152,11 @@
     <ClInclude Include="json.hpp" />
     <ClInclude Include="MapLoader.h" />
     <ClInclude Include="Player.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="arial.ttf">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </Font>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -42,4 +42,7 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="arial.ttf" />
+  </ItemGroup>
 </Project>

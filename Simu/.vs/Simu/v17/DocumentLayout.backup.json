@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\",
+  "WorkspaceRootPath": "C:\\Users\\juanc\\OneDrive\\Desktop\\DesafiSimu2\\Simu\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\juanc\\OneDrive\\Desktop\\DesafiSimu2\\Simu\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
@@ -14,17 +14,33 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 4,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\main.cpp",
+              "DocumentMoniker": "C:\\Users\\juanc\\OneDrive\\Desktop\\DesafiSimu2\\Simu\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
-              "ToolTip": "C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\main.cpp",
+              "ToolTip": "C:\\Users\\juanc\\OneDrive\\Desktop\\DesafiSimu2\\Simu\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAAPcAAAAAAAAAAAAuwAQBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAC0CAAAAAAAAAADwvzwCAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-06-15T19:34:08.533Z",
               "EditorCaption": ""

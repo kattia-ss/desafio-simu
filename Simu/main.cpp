@@ -8,7 +8,7 @@
 #include <functional>
 #include <unordered_set>
 #include <unordered_map>
-
+#include <fstream>
 #include "GameConstants.h"
 #include "HexagonCell.h"
 #include "Player.h"
@@ -169,6 +169,37 @@ vector<pair<int, int>> findPathAStar(vector<vector<HexagonCell>>& grid, int star
     return {}; // No se encontró camino
 }
 
+//pantalla de derrota
+void showEndScreen(sf::RenderWindow& window, const std::string& message, const sf::Font& font) {
+    sf::Text endText;
+    endText.setFont(font);
+    endText.setCharacterSize(32);
+    endText.setFillColor(sf::Color::White);
+    endText.setString(message + "\n\nPresiona ESPACIO para salir");
+
+    // Centrar texto
+    sf::FloatRect textRect = endText.getLocalBounds();
+    endText.setOrigin(textRect.width / 2.f, textRect.height / 2.f);
+    endText.setPosition(WINDOW_WIDTH / 2.f, WINDOW_HEIGHT / 2.f);
+
+    window.clear(sf::Color::Black);
+    window.draw(endText);
+    window.display();
+
+    // Esperar a que el usuario presione una tecla
+    sf::Event event;
+    while (true) {
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::KeyPressed || event.type == sf::Event::Closed) {
+                window.close();
+                return;
+            }
+        }
+    }
+}
+
+
+
 int main() {
     RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Templo - A* Pathfinding Fixed");
     window.setFramerateLimit(60);
@@ -246,39 +277,32 @@ int main() {
     cout << "===============================" << endl;
 
     // Intentar cargar la fuente - CORREGIDO
-    Font font;
+    
     bool fontLoaded = false;
-
-    // Intentar múltiples rutas de fuentes comunes
-    vector<string> fontPaths = {
-        "arial.ttf",
-        "C:/Windows/Fonts/arial.ttf",
-        "C:/Windows/Fonts/calibri.ttf",
-        "/System/Library/Fonts/Arial.ttf", // macOS
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", // Linux
-        "assets/fonts/arial.ttf" // Carpeta local del proyecto
-    };
-
-    for (const string& fontPath : fontPaths) {
-        if (font.loadFromFile(fontPath)) {
-            fontLoaded = true;
-            cout << "Fuente cargada desde: " << fontPath << endl;
-            break;
-        }
+    std::ifstream check("fonts/ARCADECLASSIC.TTF");
+    if (!check.is_open()) {
+        std::cerr << " No se puede abrir fonts/ARCADECLASSIC.TTF desde C++" << std::endl;
+        return -1;
     }
 
-    if (!fontLoaded) {
-        cout << "Advertencia: No se pudo cargar ninguna fuente. El texto no se mostrará." << endl;
+    sf::Font font;
+    if (!font.loadFromFile("fonts/ARCADECLASSIC.TTF")) {
+        std::cerr << "Error cargando fuente" << std::endl;
+        return -1;
     }
+
+    
 
     // Crear textos solo si la fuente se cargó correctamente
     Text scoreText, visitedText, energyText, positionText, pathText, timeText, instructionsText;
     Clock gameClock; // Para mostrar tiempo transcurrido
 
+    fontLoaded = true;
+
     if (fontLoaded) {
         // Configurar texto de puntuación
         scoreText.setFont(font);
-        scoreText.setCharacterSize(20);
+        scoreText.setCharacterSize(50);
         scoreText.setFillColor(Color::White);
         scoreText.setPosition(10, 30);
 
@@ -286,7 +310,7 @@ int main() {
         visitedText.setFont(font);
         visitedText.setCharacterSize(16);
         visitedText.setFillColor(Color(200, 200, 200));
-        visitedText.setPosition(10, 55);
+        visitedText.setPosition(10, 85);
 
         // Configurar texto de energía
         energyText.setFont(font);
@@ -298,19 +322,19 @@ int main() {
         positionText.setFont(font);
         positionText.setCharacterSize(14);
         positionText.setFillColor(Color(255, 255, 0));
-        positionText.setPosition(10, 80);
+        positionText.setPosition(10, 110);
 
         // Configurar texto de información del camino
         pathText.setFont(font);
         pathText.setCharacterSize(14);
         pathText.setFillColor(Color(255, 165, 0));
-        pathText.setPosition(10, 100);
+        pathText.setPosition(10, 130);
 
         // Configurar texto de tiempo
         timeText.setFont(font);
         timeText.setCharacterSize(14);
         timeText.setFillColor(Color(150, 255, 150));
-        timeText.setPosition(10, 120);
+        timeText.setPosition(10, 150);
 
         // Configurar texto de instrucciones
         instructionsText.setFont(font);
@@ -342,11 +366,11 @@ int main() {
                                 if (!currentPath.empty()) {
                                     cout << "???  RUTA A* CALCULADA:" << endl;
                                     cout << "   Longitud del camino: " << currentPath.size() << " pasos" << endl;
-                                    cout << "   Puntuación actual: " << score << " puntos" << endl;
+                                    cout << "   Puntuacion actual: " << score << " puntos" << endl;
                                     cout << "   Celdas visitadas: " << visited.size() << endl;
                                 }
                                 else {
-                                    cout << "? No se encontró ruta al objetivo!" << endl;
+                                    cout << "? No se encontro ruta al objetivo!" << endl;
                                 }
                                 break;
                             }
@@ -402,13 +426,13 @@ int main() {
                     if (isBacktrack) {
                         score -= BACKTRACK_PENALTY;
                         cout << "?? BACKTRACKING! Penalización: -" << BACKTRACK_PENALTY
-                            << " puntos. Puntuación actual: " << score << endl;
+                            << " puntos. Puntuacion actual: " << score << endl;
                     }
                     else {
                         visited.insert(target);
                         energy = min(energy + 1, MAX_ENERGY);
                         cout << "? Nueva casilla explorada! Energía: +" << 1
-                            << " Puntuación: " << score << endl;
+                            << " Puntuacion: " << score << endl;
                     }
 
                     // Verificar si recogió un item
@@ -417,7 +441,7 @@ int main() {
                         grid[newRow][newCol].itemCollected = true;
                         grid[newRow][newCol].isItem = false;
                         grid[newRow][newCol].setFillColor(Color::White);
-                        cout << "?? ¡ITEM RECOGIDO! +100 puntos. Puntuación: " << score << endl;
+                        cout << "?? ¡ITEM RECOGIDO! +100 puntos. Puntuacion: " << score << endl;
                     }
 
                     player.row = newRow;
@@ -425,11 +449,11 @@ int main() {
 
                     if (grid[newRow][newCol].isGoal) {
                         cout << "\n?? ¡GANASTE! ??" << endl;
-                        cout << "Puntuación final: " << score << " puntos" << endl;
+                        cout << "Puntuacion final: " << score << " puntos" << endl;
                         cout << "Celdas visitadas: " << visited.size() << endl;
                         cout << "Eficiencia: " << (visited.size() > 0 ? (float)score / visited.size() : 0)
                             << " puntos por celda" << endl;
-                        window.close();
+                        showEndScreen(window, "Felicidades ganaste", font);
                     }
                 }
 
@@ -490,7 +514,7 @@ int main() {
             cout << "Puntuación final: " << score << " puntos" << endl;
             cout << "Celdas visitadas: " << visited.size() << endl;
             cout << "Causa: El agua te alcanzó" << endl;
-            window.close();
+            showEndScreen(window, "GAME OVER", font);
         }
 
         window.clear(Color(60, 60, 60));
@@ -531,25 +555,25 @@ int main() {
         // Actualizar y dibujar textos de información solo si la fuente se cargó
         if (fontLoaded) {
             // Actualizar textos con información en tiempo real
-            scoreText.setString("Puntuacion: " + to_string(score));
-            visitedText.setString("Celdas visitadas: " + to_string(visited.size()));
-            energyText.setString("Energia: " + to_string(energy) + "/" + to_string(MAX_ENERGY));
-            positionText.setString("Posicion: (" + to_string(player.row) + ", " + to_string(player.col) + ")");
+            scoreText.setString("Puntuacion " + to_string(score));
+            visitedText.setString("Celdas visitadas " + to_string(visited.size()));
+            energyText.setString("Energia " + to_string(energy) + " de " + to_string(MAX_ENERGY));
+            positionText.setString("Posicion " + to_string(player.row) + "  " + to_string(player.col) + " ");
 
             // Información del camino A*
             if (!currentPath.empty()) {
-                pathText.setString("Ruta A*: " + to_string(currentPath.size()) + " pasos calculados");
+                pathText.setString("Ruta con " + to_string(currentPath.size()) + " pasos calculados");
             }
             else {
-                pathText.setString("Ruta A*: No calculada (presiona F)");
+                pathText.setString("Ruta No calculada presiona F");
             }
 
             // Tiempo transcurrido
             int timeElapsed = static_cast<int>(gameClock.getElapsedTime().asSeconds());
             int minutes = timeElapsed / 60;
             int seconds = timeElapsed % 60;
-            timeText.setString("Tiempo: " + to_string(minutes) + ":" +
-                (seconds < 10 ? "0" : "") + to_string(seconds));
+            timeText.setString("Tiempo " + to_string(minutes) + " minutos " +
+                (seconds < 10 ? "0" : "") + to_string(seconds) + " segundos") ;
 
             // Dibujar todos los textos
             window.draw(scoreText);
@@ -567,13 +591,13 @@ int main() {
             statusText.setFillColor(Color(200, 200, 255));
             statusText.setPosition(WINDOW_WIDTH - 200, 10);
 
-            string statusInfo = "Estado del juego:\n";
-            statusInfo += "Muro roto: " + string(wallBreakUsed ? "SI" : "NO") + "\n";
-            statusInfo += "Nivel agua: " + to_string(static_cast<int>(waterClock.getElapsedTime().asSeconds() / WATER_STEP_INTERVAL)) + "\n";
+            string statusInfo = "Estado del juego \n";
+            statusInfo += "Muro roto " + string(wallBreakUsed ? "SI" : "NO") + "\n";
+            statusInfo += "Nivel agua " + to_string(static_cast<int>(waterClock.getElapsedTime().asSeconds() / WATER_STEP_INTERVAL)) + "\n";
 
             // Calcular eficiencia
             float efficiency = visited.size() > 0 ? (float)score / visited.size() : 0;
-            statusInfo += "Eficiencia: " + to_string(static_cast<int>(efficiency)) + " pts/celda";
+            statusInfo += "Eficiencia " + to_string(static_cast<int>(efficiency)) + " pts por celda";
 
             statusText.setString(statusInfo);
             window.draw(statusText);

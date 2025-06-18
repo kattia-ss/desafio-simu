@@ -2,12 +2,12 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\juanc\OneDrive\Desktop\DesafiSimu2\Simu\x64\Debug\Simu.exe</FullPath>
+      <FullPath>C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\x64\Debug\Simu.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Users\juanc\OneDrive\Desktop\DesafiSimu2\Simu\arial.ttf</FullPath>
+      <FullPath>C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\arial.ttf</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

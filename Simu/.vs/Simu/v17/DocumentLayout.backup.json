@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\juanc\\OneDrive\\Desktop\\DesafiSimu2\\Simu\\",
+  "WorkspaceRootPath": "C:\\Users\\juanc\\OneDrive\\Desktop\\Desafio Simu\\Simu\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\juanc\\OneDrive\\Desktop\\DesafiSimu2\\Simu\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\juanc\\OneDrive\\Desktop\\Desafio Simu\\Simu\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
@@ -36,11 +36,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Users\\juanc\\OneDrive\\Desktop\\DesafiSimu2\\Simu\\main.cpp",
+              "DocumentMoniker": "C:\\Users\\juanc\\OneDrive\\Desktop\\Desafio Simu\\Simu\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
-              "ToolTip": "C:\\Users\\juanc\\OneDrive\\Desktop\\DesafiSimu2\\Simu\\main.cpp",
+              "ToolTip": "C:\\Users\\juanc\\OneDrive\\Desktop\\Desafio Simu\\Simu\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAAC0CAAAAAAAAAADwvzwCAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAABAAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-06-15T19:34:08.533Z",
               "EditorCaption": ""

@@ -3,8 +3,8 @@ C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(44,14): warning C4244
 C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(48,14): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
 C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(83,14): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
 C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(83,34): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(218,19): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(219,19): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(225,19): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(226,19): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
   Simu.vcxproj -> C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\x64\Debug\Simu.exe
   No se encuentra el archivo: *.ttf
   0 archivo(s) copiado(s)

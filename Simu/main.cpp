@@ -175,7 +175,7 @@ void showEndScreen(sf::RenderWindow& window, const std::string& message, const s
     endText.setFont(font);
     endText.setCharacterSize(32);
     endText.setFillColor(sf::Color::White);
-    endText.setString(message + "\n\nPresiona ESPACIO para salir");
+    endText.setString(message + "\n\nPresiona CUALQUIER tecla para salir");
 
     // Centrar texto
     sf::FloatRect textRect = endText.getLocalBounds();
@@ -201,6 +201,13 @@ void showEndScreen(sf::RenderWindow& window, const std::string& message, const s
 
 
 int main() {
+    //Para resolver automaticamente
+    bool autoMoveEnabled = false;
+    size_t autoMoveIndex = 1;  // comienza desde 1 porque 0 es la posición actual del jugador
+    Clock autoMoveClock;
+    const float AUTO_MOVE_INTERVAL = 0.3f; // segundos entre cada paso
+
+
     RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Templo - A* Pathfinding Fixed");
     window.setFramerateLimit(60);
 
@@ -294,7 +301,7 @@ int main() {
     
 
     // Crear textos solo si la fuente se cargó correctamente
-    Text scoreText, visitedText, energyText, positionText, pathText, timeText, instructionsText;
+    Text scoreText, visitedText, energyText, positionText, pathText, timeText, instructionsText, automaticMode;
     Clock gameClock; // Para mostrar tiempo transcurrido
 
     fontLoaded = true;
@@ -336,12 +343,19 @@ int main() {
         timeText.setFillColor(Color(150, 255, 150));
         timeText.setPosition(10, 150);
 
+        //configurar modo automatico
+        automaticMode.setFont(font);
+        automaticMode.setCharacterSize(14);
+        automaticMode.setFillColor(Color::White);
+        automaticMode.setPosition(10, 170);
+
+
         // Configurar texto de instrucciones
         instructionsText.setFont(font);
-        instructionsText.setCharacterSize(12);
+        instructionsText.setCharacterSize(30);
         instructionsText.setFillColor(Color(180, 180, 180));
         instructionsText.setPosition(10, WINDOW_HEIGHT - 60);
-        instructionsText.setString("Controles: W/E (arriba), A/D (izq/der), Z/X (abajo)\nF: Mostrar ruta A* | R: Romper muro (energia completa)\nESC: Salir");
+        instructionsText.setString("Controles: W y E  es arriba A y D  es izq o der  Z y X  abajo \nF Mostrar ruta o R Romper muro energia completa\nESC: Salir");
     }
 
     while (window.isOpen()) {
@@ -457,22 +471,53 @@ int main() {
                     }
                 }
 
-                if (event.key.code == Keyboard::R && energy == MAX_ENERGY && !wallBreakUsed) {
+                if (event.key.code == Keyboard::R && energy == MAX_ENERGY) {
                     int nr = player.row + lastMoveDir.first;
                     int nc = player.col + lastMoveDir.second;
 
-                    if (nr >= 0 && nr < GRID_ROWS &&
-                        nc >= 0 && nc < GRID_COLS &&
-                        grid[nr][nc].isWall) {
+                    if (grid[nr][nc].isWall) {
 
                         grid[nr][nc].isWall = false;
                         grid[nr][nc].setFillColor(Color::White);
-                        wallBreakUsed = true;
+                        
                         energy = 0;
-                        cout << "?? ¡MURO DESTRUIDO! Energía gastada. Puntuación: " << score << endl;
+                        // Establecer altura alta para que  se inunde
+                        int goalHeight = 0;
+                        for (int r = 0; r < GRID_ROWS; ++r) {
+                            for (int c = 0; c < GRID_COLS; ++c) {
+                                if (grid[r][c].isGoal) {
+                                    goalHeight = grid[r][c].height;
+                                }
+                            }
+                        }
+                        grid[nr][nc].height = goalHeight;
+                        originalColors[nr][nc] = Color::White;
+                        std::cout << "?? Muro roto con altura igual a la meta: " << goalHeight << std::endl;
                     }
                 }
+                //para resolver automatico cuando presione la letra M 
+            } else if (event.key.code == Keyboard::M) {
+    // Restaurar colores pero no cuando c rompe un muro obvi duh
+                for (int r = 0; r < GRID_ROWS; ++r) {
+                    for (int c = 0; c < GRID_COLS; ++c) {
+                        if (!grid[r][c].isFlooded && !grid[r][c].isWall) {
+                            grid[r][c].setFillColor(originalColors[r][c]);
+                        }
+                    }
+                }
+
+    // Buscar el objetivo
+    for (int r = 0; r < GRID_ROWS; ++r) {
+        for (int c = 0; c < GRID_COLS; ++c) {
+            if (grid[r][c].isGoal) {
+                currentPath = findPathAStar(grid, player.row, player.col, r, c);
+                autoMoveIndex = 1;
+                autoMoveEnabled = !currentPath.empty();
+                break;
             }
+        }
+    }
+}
 
             if (event.type == Event::Closed ||
                 (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape)) {
@@ -517,6 +562,44 @@ int main() {
             showEndScreen(window, "GAME OVER", font);
         }
 
+        //manejador de eventos para la resolucion automatica
+        if (autoMoveEnabled && autoMoveIndex < currentPath.size()) {
+            if (autoMoveClock.getElapsedTime().asSeconds() >= AUTO_MOVE_INTERVAL) {
+                int newRow = currentPath[autoMoveIndex].first;
+                int newCol = currentPath[autoMoveIndex].second;
+
+                if (!grid[newRow][newCol].isFlooded) {
+                    player.row = newRow;
+                    player.col = newCol;
+                    visited.insert({ newRow, newCol });
+                    energy = min(energy + 1, MAX_ENERGY);
+
+                    if (grid[newRow][newCol].isItem && !grid[newRow][newCol].itemCollected) {
+                        score += 100;
+                        grid[newRow][newCol].itemCollected = true;
+                        grid[newRow][newCol].isItem = false;
+                        grid[newRow][newCol].setFillColor(Color::White);
+                    }
+
+                    if (grid[newRow][newCol].isGoal) {
+                        cout << "\n?? ¡GANASTE! ??" << endl;
+                        cout << "Puntuacion final: " << score << " puntos" << endl;
+                        cout << "Celdas visitadas: " << visited.size() << endl;
+                        cout << "Eficiencia: " << (visited.size() > 0 ? (float)score / visited.size() : 0)
+                            << " puntos por celda" << endl;
+                        showEndScreen(window, "Felicidades ganaste", font);
+                        window.close();
+                    }
+
+                    ++autoMoveIndex;
+                    autoMoveClock.restart(); // reiniciar el reloj
+                }
+                else {
+                    autoMoveEnabled = false; // detener movimiento si se bloquea
+                }
+            }
+        }
+
         window.clear(Color(60, 60, 60));
 
         // Dibujar la cuadrícula primero
@@ -559,6 +642,7 @@ int main() {
             visitedText.setString("Celdas visitadas " + to_string(visited.size()));
             energyText.setString("Energia " + to_string(energy) + " de " + to_string(MAX_ENERGY));
             positionText.setString("Posicion " + to_string(player.row) + "  " + to_string(player.col) + " ");
+            automaticMode.setString("Para modo auto presione M");
 
             // Información del camino A*
             if (!currentPath.empty()) {
@@ -583,6 +667,7 @@ int main() {
             window.draw(pathText);
             window.draw(timeText);
             window.draw(instructionsText);
+            window.draw(automaticMode);
 
             // Información adicional en la esquina superior derecha
             Text statusText;

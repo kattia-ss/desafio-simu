@@ -1,10 +1,18 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\juanc\\OneDrive\\Desktop\\Desafio Simu\\Simu\\",
+  "WorkspaceRootPath": "C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\juanc\\OneDrive\\Desktop\\Desafio Simu\\Simu\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\AStarpathfinder.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|solutionrelative:AStarpathfinder.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\AStarPathfinder.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|solutionrelative:AStarPathfinder.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,33 +22,43 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 2,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AStarpathfinder.cpp",
+              "DocumentMoniker": "C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\AStarpathfinder.cpp",
+              "RelativeDocumentMoniker": "AStarpathfinder.cpp",
+              "ToolTip": "C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\AStarpathfinder.cpp",
+              "RelativeToolTip": "AStarpathfinder.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-06-19T05:12:06.819Z",
+              "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:130:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AStarPathfinder.h",
+              "DocumentMoniker": "C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\AStarPathfinder.h",
+              "RelativeDocumentMoniker": "AStarPathfinder.h",
+              "ToolTip": "C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\AStarPathfinder.h",
+              "RelativeToolTip": "AStarPathfinder.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-06-19T05:11:59.44Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Users\\juanc\\OneDrive\\Desktop\\Desafio Simu\\Simu\\main.cpp",
+              "DocumentMoniker": "C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
-              "ToolTip": "C:\\Users\\juanc\\OneDrive\\Desktop\\Desafio Simu\\Simu\\main.cpp",
+              "ToolTip": "C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAANEBAAAAAAAAAAAQwOIBAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAAGcBAAAAAAAAAAAowP8AAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-06-15T19:34:08.533Z",
               "EditorCaption": ""

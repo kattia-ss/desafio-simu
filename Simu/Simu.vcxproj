@@ -112,7 +112,9 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\SFML\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-graphics-d.lib;
+sfml-window-d.lib;
+sfml-system-d.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>cd /d "$(ProjectDir)resources" &amp;&amp; xcopy /Y /I /Q *.ttf "$(OutDir)" &amp;&amp; xcopy /Y /I /Q *.dll "$(OutDir)" &amp;&amp; xcopy /Y /I /Q *.json "$(OutDir)"
@@ -134,7 +136,9 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\SFML\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-graphics-d.lib;
+sfml-window-d.lib;
+sfml-system-d.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>cd /d "$(ProjectDir)resources" &amp;&amp; xcopy /Y /I /Q *.ttf "$(OutDir)" &amp;&amp; xcopy /Y /I /Q *.dll "$(OutDir)" &amp;&amp; xcopy /Y /I /Q *.json "$(OutDir)"
@@ -142,6 +146,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AStarpathfinder.cpp" />
     <ClCompile Include="GameConstants.h" />
     <ClCompile Include="HexagonCell.cpp" />
     <ClCompile Include="main.cpp">
@@ -149,17 +154,20 @@
       </DeploymentContent>
     </ClCompile>
     <ClCompile Include="MapLoader.cpp" />
+    <ClCompile Include="UIHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AStarPathfinder.h" />
     <ClInclude Include="HexagonCell.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="MapLoader.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="UIHelper.h" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fonts\ARCADECLASSIC.TTF" >
-    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </Content>
+    <Content Include="fonts\ARCADECLASSIC.TTF">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Font Include="arial.ttf">

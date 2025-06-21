@@ -25,21 +25,40 @@ using namespace std;
 
 int main() {
 	//Para resolver automaticamente
+	bool showStartScreen = true;
 	bool autoMoveEnabled = false;
 	size_t autoMoveIndex = 1;  // comienza desde 1 porque 0 es la posición actual del jugador
 	Clock autoMoveClock;
 	const float AUTO_MOVE_INTERVAL = 0.3f; // segundos entre cada paso
+	
+	// HUD retro visual.......................................................
+	RectangleShape hudPanel;
+	hudPanel.setSize(Vector2f(400, 200));  // Tamaño del HUD
+	hudPanel.setPosition(10, 5);           // Posición en pantalla
+	hudPanel.setFillColor(Color(0, 0, 0, 160));     // Fondo negro semitransparente
+	hudPanel.setOutlineColor(Color::White);        // Borde blanco
+	hudPanel.setOutlineThickness(1.5f);            // Grosor del borde
 
 
-	RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Templo - A* Pathfinding Fixed");
+	RectangleShape statusPanel;
+	statusPanel.setSize(Vector2f(250, 100));
+	statusPanel.setPosition(WINDOW_WIDTH - 270, 20); 
+	statusPanel.setFillColor(Color(0, 0, 0, 160));    // Fondo semitransparente
+	statusPanel.setOutlineColor(Color::White);
+	statusPanel.setOutlineThickness(1.5f);
+
+	//........................................................................
+
+
+	RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Templo");
 	window.setFramerateLimit(60);
 
 	RectangleShape energyBarBack(Vector2f(120, 12));
-	energyBarBack.setPosition(10, 10);
+	energyBarBack.setPosition(20, 10);
 	energyBarBack.setFillColor(Color(50, 50, 50));
 
 	RectangleShape energyBarFill(Vector2f(0, 12));
-	energyBarFill.setPosition(10, 10);
+	energyBarFill.setPosition(20, 10);
 	energyBarFill.setFillColor(Color(0, 200, 255));
 
 	vector<vector<HexagonCell>> grid;
@@ -106,17 +125,17 @@ int main() {
 	cout << "Presiona F para mostrar el camino A*" << endl;
 	cout << "===============================" << endl;
 
-	// Intentar cargar la fuente - CORREGIDO
+	// Intentar cargar la fuente 
 
 	bool fontLoaded = false;
-	ifstream check("fonts/ARCADECLASSIC.TTF");
+	ifstream check("fonts/PRESSSTART2P.TTF");
 	if (!check.is_open()) {
-		cerr << " No se puede abrir fonts/ARCADECLASSIC.TTF desde C++" << endl;
+		cerr << " No se puede abrir fonts/PRESSSTART2P.TTF desde C++" << endl;
 		return -1;
 	}
 
-	sf::Font font;
-	if (!font.loadFromFile("fonts/ARCADECLASSIC.TTF")) {
+	Font font;
+	if (!font.loadFromFile("fonts/PRESSSTART2P.TTF")) {
 		cerr << "Error cargando fuente" << endl;
 		return -1;
 	}
@@ -130,56 +149,128 @@ int main() {
 	fontLoaded = true;
 
 	if (fontLoaded) {
-		// Configurar texto de puntuación
+		float hudX = hudPanel.getPosition().x + 10;
+		float hudY = hudPanel.getPosition().y + 10;
+
+		// Puntuación
 		scoreText.setFont(font);
-		scoreText.setCharacterSize(50);
+		scoreText.setCharacterSize(18);
 		scoreText.setFillColor(Color::White);
-		scoreText.setPosition(10, 30);
+		scoreText.setPosition(hudX, hudY);
 
-		// Configurar texto de celdas visitadas
-		visitedText.setFont(font);
-		visitedText.setCharacterSize(16);
-		visitedText.setFillColor(Color(200, 200, 200));
-		visitedText.setPosition(10, 85);
+		// Barra de energía
+		energyBarBack.setPosition(hudX, hudY + 22);
+		energyBarFill.setPosition(hudX, hudY + 22);
 
-		// Configurar texto de energía
+		// Texto de energía
 		energyText.setFont(font);
-		energyText.setCharacterSize(16);
+		energyText.setCharacterSize(12);
 		energyText.setFillColor(Color(0, 200, 255));
-		energyText.setPosition(140, 8);
+		energyText.setPosition(hudX, hudY + 39);
 
-		// Configurar texto de posición actual
+		// Celdas visitadas
+		visitedText.setFont(font);
+		visitedText.setCharacterSize(12);
+		visitedText.setFillColor(Color(200, 200, 200));
+		visitedText.setPosition(hudX, hudY + 58);
+
+		// Posición del jugador
 		positionText.setFont(font);
-		positionText.setCharacterSize(14);
+		positionText.setCharacterSize(12);
 		positionText.setFillColor(Color(255, 255, 0));
-		positionText.setPosition(10, 110);
+		positionText.setPosition(hudX, hudY + 76);
 
-		// Configurar texto de información del camino
+		// Información del camino
 		pathText.setFont(font);
-		pathText.setCharacterSize(14);
+		pathText.setCharacterSize(12);
 		pathText.setFillColor(Color(255, 165, 0));
-		pathText.setPosition(10, 130);
+		pathText.setPosition(hudX, hudY + 94);
 
-		// Configurar texto de tiempo
+		// Tiempo transcurrido
 		timeText.setFont(font);
-		timeText.setCharacterSize(14);
+		timeText.setCharacterSize(12);
 		timeText.setFillColor(Color(150, 255, 150));
-		timeText.setPosition(10, 150);
+		timeText.setPosition(hudX, hudY + 112);
 
-		//configurar modo automatico
+		// Modo automático
 		automaticMode.setFont(font);
-		automaticMode.setCharacterSize(14);
+		automaticMode.setCharacterSize(12);
 		automaticMode.setFillColor(Color::White);
-		automaticMode.setPosition(10, 170);
+		automaticMode.setPosition(hudX, hudY + 130);
 
 
-		// Configurar texto de instrucciones
+		// Instrucciones (abajo)
 		instructionsText.setFont(font);
-		instructionsText.setCharacterSize(30);
+		instructionsText.setCharacterSize(14);
 		instructionsText.setFillColor(Color(180, 180, 180));
-		instructionsText.setPosition(10, WINDOW_HEIGHT - 60);
-		instructionsText.setString("Controles: W y E  es arriba A y D  es izq o der  Z y X  abajo \nF Mostrar ruta o R Romper muro energia completa\nESC: Salir");
+		instructionsText.setLineSpacing(1.3f);
+		instructionsText.setPosition(20, WINDOW_HEIGHT - 70);
+		instructionsText.setString(
+			"Controles: W/E = Arriba diag | A/D = Izq/Der | Z/X = Abajo diag\n"
+			"F = Ruta A* | R = Romper muro | M = Auto | ESC = Salir"
+		);
 	}
+
+	// Mostrar pantalla principal
+	if (showStartScreen) {
+		Text title, controls, startPrompt;
+
+		// --- TÍTULO ---
+		title.setFont(font);
+		title.setString("TEMPLO: Escape del Hexamundo");
+		title.setCharacterSize(32);
+		title.setFillColor(Color::Yellow);
+		title.setOrigin(title.getLocalBounds().width / 2, 0);
+		title.setPosition(WINDOW_WIDTH / 2.f, 60);
+
+		// --- CONTROLES ---
+		controls.setFont(font);
+		controls.setCharacterSize(20);
+		controls.setFillColor(Color::White);
+		controls.setLineSpacing(1.4f);
+		controls.setString(
+			"CONTROLES DEL JUGADOR\n"
+			"W / E  = Diagonal arriba izq / der\n"
+			"A / D  = Izquierda / Derecha\n"
+			"Z / X  = Diagonal abajo izq / der\n"
+			"F      = Mostrar ruta A*\n"
+			"R      = Romper muro (energia completa)\n"
+			"M      = Modo automatico\n"
+			"ESC    = Salir"
+		);
+		controls.setOrigin(controls.getLocalBounds().width / 2, 0);
+		controls.setPosition(WINDOW_WIDTH / 2.f, 120);
+
+		// --- MENSAJE DE INICIO ---
+		startPrompt.setFont(font);
+		startPrompt.setString("Presiona ENTER para comenzar...");
+		startPrompt.setCharacterSize(16);
+		startPrompt.setFillColor(Color(150, 255, 150));
+		startPrompt.setOrigin(startPrompt.getLocalBounds().width / 2, 0);
+		startPrompt.setPosition(WINDOW_WIDTH / 2.f, WINDOW_HEIGHT - 80);
+
+		// --- LOOP DE PANTALLA DE INICIO ---
+		while (window.isOpen() && showStartScreen) {
+			Event e;
+			while (window.pollEvent(e)) {
+				if (e.type == Event::Closed)
+					window.close();
+				if (e.type == Event::KeyPressed && e.key.code == Keyboard::Enter)
+					showStartScreen = false;
+			}
+
+			window.clear(Color(30, 30, 30));
+			window.draw(title);
+			window.draw(controls);
+			window.draw(startPrompt);
+			window.display();
+		}
+	}
+
+
+
+
+	// INICIO DE PROGRAMA PRINCIPAL.........................................
 
 	while (window.isOpen()) {
 		Event event;
@@ -492,33 +583,45 @@ int main() {
 			timeText.setString("Tiempo " + to_string(minutes) + " minutos " +
 				(seconds < 10 ? "0" : "") + to_string(seconds) + " segundos");
 
-			// Dibujar todos los textos
-			window.draw(scoreText);
-			window.draw(visitedText);
-			window.draw(energyText);
-			window.draw(positionText);
-			window.draw(pathText);
-			window.draw(timeText);
-			window.draw(instructionsText);
-			window.draw(automaticMode);
+
 
 			// Información adicional en la esquina superior derecha
 			Text statusText;
 			statusText.setFont(font);
 			statusText.setCharacterSize(12);
 			statusText.setFillColor(Color(200, 200, 255));
-			statusText.setPosition(WINDOW_WIDTH - 200, 10);
+			statusText.setPosition(statusPanel.getPosition().x + 10, statusPanel.getPosition().y + 10);
 
-			string statusInfo = "Estado del juego \n";
+			// Contenido del estado
+			string statusInfo = "Estado del juego\n";
 			statusInfo += "Muro roto " + string(wallBreakUsed ? "SI" : "NO") + "\n";
 			statusInfo += "Nivel agua " + to_string(static_cast<int>(waterClock.getElapsedTime().asSeconds() / WATER_STEP_INTERVAL)) + "\n";
 
 			// Calcular eficiencia
 			float efficiency = visited.size() > 0 ? (float)score / visited.size() : 0;
-			statusInfo += "Eficiencia " + to_string(static_cast<int>(efficiency)) + " pts por celda";
+			statusInfo += "Eficiencia:\n" + to_string((int)efficiency) + " pts/celda";
 
 			statusText.setString(statusInfo);
+
+
+
+			// Dibujar HUD principal
+			window.draw(hudPanel);
+			window.draw(scoreText);
+			window.draw(visitedText);
+			window.draw(energyText);
+			window.draw(positionText);
+			window.draw(pathText);
+			window.draw(timeText);
+			window.draw(automaticMode);
+
+			// Dibujar HUD de estado
+			window.draw(statusPanel);
 			window.draw(statusText);
+
+			// Instrucciones (abajo)
+			window.draw(instructionsText);
+
 		}
 
 		window.display();

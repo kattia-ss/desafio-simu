@@ -31,7 +31,6 @@ Makefile
 
 # Executables
 *.exe
-*.dll
 *.lib
 *.exp
 *.out
@@ -51,7 +50,6 @@ Thumbs.db
 Desktop.ini
 
 # Archivos de fuentes si están en recursos y se copian al output
-*.ttf
 *.otf
 
 # Archivos generados por SFML al correr en Debug con recursos

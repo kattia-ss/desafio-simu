@@ -1,2 +1,2 @@
 C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\x64\Debug\fonts\ARCADECLASSIC.TTF
-C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\x64\Debug\fonts\ARCADECLASSIC.TTF
+C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\x64\Debug\fonts\PRESSSTART2P.TTF

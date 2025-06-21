@@ -10,7 +10,7 @@ const float HEX_SPACING = 2.0f;
 const float OUTLINE_THICKNESS = 1.5f;
 
 // Game mechanics constants
-const float WATER_STEP_INTERVAL = 4.0f;
+const float WATER_STEP_INTERVAL = 5.0f;
 const int INITIAL_SCORE = 100;
 const int BACKTRACK_PENALTY = 5;
 const int MAX_ENERGY = 5;

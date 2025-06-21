@@ -7,7 +7,7 @@ using namespace sf;
 void showEndScreen(RenderWindow& window, const string& message, const Font& font) {
     Text endText;
     endText.setFont(font);
-    endText.setCharacterSize(32);
+    endText.setCharacterSize(15);
     endText.setFillColor(Color::White);
     endText.setString(message + "\n\nPresiona CUALQUIER tecla para salir");
 

@@ -30,6 +30,8 @@ int main() {
 	size_t autoMoveIndex = 1;  // comienza desde 1 porque 0 es la posición actual del jugador
 	Clock autoMoveClock;
 	const float AUTO_MOVE_INTERVAL = 0.3f; // segundos entre cada paso
+
+
 	
 	// HUD retro visual.......................................................
 	RectangleShape hudPanel;
@@ -60,6 +62,26 @@ int main() {
 	RectangleShape energyBarFill(Vector2f(0, 12));
 	energyBarFill.setPosition(20, 10);
 	energyBarFill.setFillColor(Color(0, 200, 255));
+
+
+	// Intentar cargar la fuente 
+
+	bool fontLoaded = false;
+	ifstream check("fonts/PRESSSTART2P.TTF");
+	if (!check.is_open()) {
+		cerr << " No se puede abrir fonts/PRESSSTART2P.TTF desde C++" << endl;
+		return -1;
+	}
+
+	Font font;
+	if (!font.loadFromFile("fonts/PRESSSTART2P.TTF")) {
+		cerr << "Error cargando fuente" << endl;
+		return -1;
+	}
+
+
+
+
 
 	vector<vector<HexagonCell>> grid;
 	if (!loadMapFromJson("mapa2.json", grid)) return -1;
@@ -125,20 +147,6 @@ int main() {
 	cout << "Presiona F para mostrar el camino A*" << endl;
 	cout << "===============================" << endl;
 
-	// Intentar cargar la fuente 
-
-	bool fontLoaded = false;
-	ifstream check("fonts/PRESSSTART2P.TTF");
-	if (!check.is_open()) {
-		cerr << " No se puede abrir fonts/PRESSSTART2P.TTF desde C++" << endl;
-		return -1;
-	}
-
-	Font font;
-	if (!font.loadFromFile("fonts/PRESSSTART2P.TTF")) {
-		cerr << "Error cargando fuente" << endl;
-		return -1;
-	}
 
 
 
@@ -257,6 +265,9 @@ int main() {
 					window.close();
 				if (e.type == Event::KeyPressed && e.key.code == Keyboard::Enter)
 					showStartScreen = false;
+					waterClock.restart();
+					gameClock.restart();
+
 			}
 
 			window.clear(Color(30, 30, 30));
@@ -394,12 +405,13 @@ int main() {
 					}
 				}
 
-				if (event.key.code == Keyboard::R && energy == MAX_ENERGY) {
+				if (event.key.code == Keyboard::R && energy == MAX_ENERGY && !wallBreakUsed){
+					
 					int nr = player.row + lastMoveDir.first;
 					int nc = player.col + lastMoveDir.second;
 
-					if (grid[nr][nc].isWall) {
-
+					if (nr >= 0 && nr < GRID_ROWS && nc >= 0 && nc < GRID_COLS && grid[nr][nc].isWall) {
+						wallBreakUsed = true;
 						grid[nr][nc].isWall = false;
 						grid[nr][nc].setFillColor(Color::White);
 
@@ -415,7 +427,7 @@ int main() {
 						}
 						grid[nr][nc].height = goalHeight;
 						originalColors[nr][nc] = Color::White;
-						std::cout << "?? Muro roto con altura igual a la meta: " << goalHeight << std::endl;
+						cout << "?? Muro roto con altura igual a la meta: " << goalHeight << endl;
 					}
 				}
 				//para resolver automatico cuando presione la letra M 

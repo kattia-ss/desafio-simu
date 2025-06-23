@@ -18,9 +18,15 @@
 #include "AStarPathfinder.h"
 #include "UIHelper.h"
 
+#include "FileSelector.h"
+
+// delcaración de funciones auxiliares
+void showStartScreenWithFileSelector(RenderWindow& window, const Font& font, FileSelector& fileSelector);
+bool loadMapWithValidation(const string& filename, vector<vector<HexagonCell>>& grid);
 
 using namespace sf;
 using namespace std;
+
 
 
 int main() {
@@ -79,12 +85,32 @@ int main() {
 		return -1;
 	}
 
+	// seleccionar el archivo de mapa
+	FileSelector fileSelector;
+	string selectedMapFile = "mapa2.json"; // Por defecto
 
+	if (showStartScreen) {
+		showStartScreenWithFileSelector(window, font, fileSelector);
 
+		// Obtener el archivo seleccionado
+		selectedMapFile = fileSelector.getSelectedFile();
+		if (selectedMapFile.empty()) {
+			selectedMapFile = "mapa2.json"; // Fallback al mapa por defecto
+		}
+
+		cout << "Cargando mapa: " << selectedMapFile << endl;
+	}
 
 
 	vector<vector<HexagonCell>> grid;
-	if (!loadMapFromJson("mapa2.json", grid)) return -1;
+	if (!loadMapWithValidation(selectedMapFile, grid)) {
+		// Si falla, intentar cargar el mapa por defecto
+		cout << "Intentando cargar mapa por defecto..." << endl;
+		if (!loadMapWithValidation("mapa2.json", grid)) {
+			cerr << "Error crítico: No se pudo cargar ningún mapa válido" << endl;
+			return -1;
+		}
+	}
 
 	int GRID_ROWS = grid.size();
 	int GRID_COLS = grid[0].size();
@@ -219,70 +245,11 @@ int main() {
 		);
 	}
 
-	// Mostrar pantalla principal
-	if (showStartScreen) {
-		Text title, controls, startPrompt;
-
-		// --- TÍTULO ---
-		title.setFont(font);
-		title.setString("TEMPLO: Escape del Hexamundo");
-		title.setCharacterSize(32);
-		title.setFillColor(Color::Yellow);
-		title.setOrigin(title.getLocalBounds().width / 2, 0);
-		title.setPosition(WINDOW_WIDTH / 2.f, 60);
-
-		// --- CONTROLES ---
-		controls.setFont(font);
-		controls.setCharacterSize(20);
-		controls.setFillColor(Color::White);
-		controls.setLineSpacing(1.4f);
-		controls.setString(
-			"CONTROLES DEL JUGADOR\n"
-			"W / E  = Diagonal arriba izq / der\n"
-			"A / D  = Izquierda / Derecha\n"
-			"Z / X  = Diagonal abajo izq / der\n"
-			"F      = Mostrar ruta A*\n"
-			"R      = Romper muro (energia completa)\n"
-			"M      = Modo automatico\n"
-			"ESC    = Salir"
-		);
-		controls.setOrigin(controls.getLocalBounds().width / 2, 0);
-		controls.setPosition(WINDOW_WIDTH / 2.f, 120);
-
-		// --- MENSAJE DE INICIO ---
-		startPrompt.setFont(font);
-		startPrompt.setString("Presiona ENTER para comenzar...");
-		startPrompt.setCharacterSize(16);
-		startPrompt.setFillColor(Color(150, 255, 150));
-		startPrompt.setOrigin(startPrompt.getLocalBounds().width / 2, 0);
-		startPrompt.setPosition(WINDOW_WIDTH / 2.f, WINDOW_HEIGHT - 80);
-
-		// --- LOOP DE PANTALLA DE INICIO ---
-		while (window.isOpen() && showStartScreen) {
-			Event e;
-			while (window.pollEvent(e)) {
-				if (e.type == Event::Closed)
-					window.close();
-				if (e.type == Event::KeyPressed && e.key.code == Keyboard::Enter)
-					showStartScreen = false;
-					waterClock.restart();
-					gameClock.restart();
-
-			}
-
-			window.clear(Color(30, 30, 30));
-			window.draw(title);
-			window.draw(controls);
-			window.draw(startPrompt);
-			window.display();
-		}
-	}
+	waterClock.restart();
+	gameClock.restart();
 
 
-
-
-	// INICIO DE PROGRAMA PRINCIPAL.........................................
-
+	// inicio del programa principal
 	while (window.isOpen()) {
 		Event event;
 		while (window.pollEvent(event)) {
@@ -405,8 +372,8 @@ int main() {
 					}
 				}
 
-				if (event.key.code == Keyboard::R && energy == MAX_ENERGY && !wallBreakUsed){
-					
+				if (event.key.code == Keyboard::R && energy == MAX_ENERGY && !wallBreakUsed) {
+
 					int nr = player.row + lastMoveDir.first;
 					int nc = player.col + lastMoveDir.second;
 
@@ -416,7 +383,7 @@ int main() {
 						grid[nr][nc].setFillColor(Color::White);
 
 						energy = 0;
-						// Establecer altura alta para que  se inunde
+						// Establecer altura alta para que se inunde
 						int goalHeight = 0;
 						for (int r = 0; r < GRID_ROWS; ++r) {
 							for (int c = 0; c < GRID_COLS; ++c) {
@@ -431,25 +398,25 @@ int main() {
 					}
 				}
 				//para resolver automatico cuando presione la letra M 
-			}
-			else if (event.key.code == Keyboard::M) {
-				// Restaurar colores pero no cuando c rompe un muro obvi duh
-				for (int r = 0; r < GRID_ROWS; ++r) {
-					for (int c = 0; c < GRID_COLS; ++c) {
-						if (!grid[r][c].isFlooded && !grid[r][c].isWall) {
-							grid[r][c].setFillColor(originalColors[r][c]);
+				else if (event.key.code == Keyboard::M) {
+					// Restaurar colores pero no cuando se rompe un muro obvi duh
+					for (int r = 0; r < GRID_ROWS; ++r) {
+						for (int c = 0; c < GRID_COLS; ++c) {
+							if (!grid[r][c].isFlooded && !grid[r][c].isWall) {
+								grid[r][c].setFillColor(originalColors[r][c]);
+							}
 						}
 					}
-				}
 
-				// Buscar el objetivo
-				for (int r = 0; r < GRID_ROWS; ++r) {
-					for (int c = 0; c < GRID_COLS; ++c) {
-						if (grid[r][c].isGoal) {
-							currentPath = findPathAStar(grid, player.row, player.col, r, c);
-							autoMoveIndex = 1;
-							autoMoveEnabled = !currentPath.empty();
-							break;
+					// Buscar el objetivo
+					for (int r = 0; r < GRID_ROWS; ++r) {
+						for (int c = 0; c < GRID_COLS; ++c) {
+							if (grid[r][c].isGoal) {
+								currentPath = findPathAStar(grid, player.row, player.col, r, c);
+								autoMoveIndex = 1;
+								autoMoveEnabled = !currentPath.empty();
+								break;
+							}
 						}
 					}
 				}
@@ -595,8 +562,6 @@ int main() {
 			timeText.setString("Tiempo " + to_string(minutes) + " minutos " +
 				(seconds < 10 ? "0" : "") + to_string(seconds) + " segundos");
 
-
-
 			// Información adicional en la esquina superior derecha
 			Text statusText;
 			statusText.setFont(font);
@@ -615,8 +580,6 @@ int main() {
 
 			statusText.setString(statusInfo);
 
-
-
 			// Dibujar HUD principal
 			window.draw(hudPanel);
 			window.draw(scoreText);
@@ -633,11 +596,132 @@ int main() {
 
 			// Instrucciones (abajo)
 			window.draw(instructionsText);
-
 		}
 
 		window.display();
 	}
 
 	return 0;
+}
+
+void showStartScreenWithFileSelector(RenderWindow& window, const Font& font, FileSelector& fileSelector) {
+	Text title, controls, startPrompt, filePrompt;
+
+	// --- TÍTULO ---
+	title.setFont(font);
+	title.setString("TEMPLO: Escape del Hexamundo");
+	title.setCharacterSize(32);
+	title.setFillColor(Color::Yellow);
+	title.setOrigin(title.getLocalBounds().width / 2, 0);
+	title.setPosition(WINDOW_WIDTH / 2.f, 40);
+
+	// --- CONTROLES ---
+	controls.setFont(font);
+	controls.setCharacterSize(18);
+	controls.setFillColor(Color::White);
+	controls.setLineSpacing(1.3f);
+	controls.setString(
+		"CONTROLES DEL JUGADOR\n"
+		"W / E  = Diagonal arriba izq / der\n"
+		"A / D  = Izquierda / Derecha\n"
+		"Z / X  = Diagonal abajo izq / der\n"
+		"F      = Mostrar ruta A*\n"
+		"R      = Romper muro (energia completa)\n"
+		"M      = Modo automatico\n"
+		"ESC    = Salir"
+	);
+	controls.setOrigin(controls.getLocalBounds().width / 2, 0);
+	controls.setPosition(WINDOW_WIDTH / 2.f, 100);
+
+	// --- SELECCIÓN DE ARCHIVO ---
+	filePrompt.setFont(font);
+	filePrompt.setString("Presiona TAB para seleccionar mapa JSON");
+	filePrompt.setCharacterSize(16);
+	filePrompt.setFillColor(Color(150, 200, 255));
+	filePrompt.setOrigin(filePrompt.getLocalBounds().width / 2, 0);
+	filePrompt.setPosition(WINDOW_WIDTH / 2.f, WINDOW_HEIGHT - 120);
+
+	// --- MENSAJE DE INICIO ---
+	startPrompt.setFont(font);
+	startPrompt.setString("Presiona ENTER para comenzar...");
+	startPrompt.setCharacterSize(16);
+	startPrompt.setFillColor(Color(150, 255, 150));
+	startPrompt.setOrigin(startPrompt.getLocalBounds().width / 2, 0);
+	startPrompt.setPosition(WINDOW_WIDTH / 2.f, WINDOW_HEIGHT - 80);
+
+	// Mostrar archivo seleccionado
+	Text selectedFileText;
+	selectedFileText.setFont(font);
+	selectedFileText.setCharacterSize(14);
+	selectedFileText.setFillColor(Color::Cyan);
+	selectedFileText.setOrigin(selectedFileText.getLocalBounds().width / 2, 0);
+	selectedFileText.setPosition(WINDOW_WIDTH / 2.f, WINDOW_HEIGHT - 100);
+
+	while (window.isOpen()) {
+		Event e;
+		while (window.pollEvent(e)) {
+			if (e.type == Event::Closed) {
+				window.close();
+				return;
+			}
+
+			// Manejar input del selector de archivos
+			fileSelector.handleInput(e);
+
+			if (e.type == Event::KeyPressed) {
+				if (e.key.code == Keyboard::Tab && !fileSelector.isVisible()) {
+					fileSelector.show();
+				}
+				else if (e.key.code == Keyboard::Enter && !fileSelector.isVisible()) {
+					return; // Comenzar juego
+				}
+			}
+		}
+
+		// Actualizar texto del archivo seleccionado
+		string currentFile = fileSelector.getSelectedFile();
+		if (currentFile.empty()) currentFile = "mapa2.json";
+		selectedFileText.setString("Mapa: " + currentFile);
+		selectedFileText.setOrigin(selectedFileText.getLocalBounds().width / 2, 0);
+
+		window.clear(Color(30, 30, 30));
+
+		// Dibujar elementos de la pantalla principal
+		if (!fileSelector.isVisible()) {
+			window.draw(title);
+			window.draw(controls);
+			window.draw(filePrompt);
+			window.draw(selectedFileText);
+			window.draw(startPrompt);
+		}
+
+		// Dibujar selector de archivos encima si está visible
+		fileSelector.draw(window, font);
+
+		window.display();
+	}
+}
+
+// Función para cargar mapa con validación y manejo de errores
+bool loadMapWithValidation(const string& filename, vector<vector<HexagonCell>>& grid) {
+	FileSelector validator;
+
+	// Validar estructura del JSON
+	if (!validator.validateJsonStructure(filename)) {
+		cerr << "Error: El archivo " << filename << " no tiene una estructura JSON válida" << endl;
+		cerr << "El archivo debe contener: rows, cols, grid, heightMap" << endl;
+		cerr << "Y debe tener al menos un punto de inicio (S) y un objetivo (G)" << endl;
+		return false;
+	}
+
+	// Intentar cargar el mapa
+	if (!loadMapFromJson(filename, grid)) {
+		cerr << "Error: No se pudo cargar el archivo " << filename << endl;
+		return false;
+	}
+
+	cout << "? Mapa cargado exitosamente: " << filename << endl;
+	cout << "  Dimensiones: " << grid.size() << "x" << grid[0].size() << endl;
+
+	return true;
 }

@@ -105,7 +105,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>C:\SFML\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -147,6 +147,7 @@ sfml-system-d.lib</AdditionalDependencies>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AStarpathfinder.cpp" />
+    <ClCompile Include="FileSelector.cpp" />
     <ClCompile Include="GameConstants.h" />
     <ClCompile Include="HexagonCell.cpp" />
     <ClCompile Include="main.cpp">
@@ -158,6 +159,7 @@ sfml-system-d.lib</AdditionalDependencies>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AStarPathfinder.h" />
+    <ClInclude Include="FileSelector.h" />
     <ClInclude Include="HexagonCell.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="MapLoader.h" />

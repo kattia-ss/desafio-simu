@@ -31,6 +31,7 @@ using namespace std;
 
 
 int main() {
+
 	//Para resolver automaticamente
 	bool showStartScreen = true;
 	bool autoMoveEnabled = false;
@@ -38,12 +39,17 @@ int main() {
 	Clock autoMoveClock;
 	const float AUTO_MOVE_INTERVAL = 0.3f; // segundos entre cada paso
 
+	RenderWindow window(VideoMode::getDesktopMode(), "Templo", Style::Fullscreen);
+	window.setFramerateLimit(60);
+
+	float windowWidth = window.getSize().x;
+	float windowHeight = window.getSize().y;
 
 	
 	// HUD retro visual.......................................................
 	RectangleShape hudPanel;
 	hudPanel.setSize(Vector2f(400, 200));  // Tamaño del HUD
-	hudPanel.setPosition(10, 5);           // Posición en pantalla
+	hudPanel.setPosition(20, 20);           // Posición en pantalla
 	hudPanel.setFillColor(Color(0, 0, 0, 160));     // Fondo negro semitransparente
 	hudPanel.setOutlineColor(Color::White);        // Borde blanco
 	hudPanel.setOutlineThickness(1.5f);            // Grosor del borde
@@ -51,16 +57,13 @@ int main() {
 
 	RectangleShape statusPanel;
 	statusPanel.setSize(Vector2f(250, 100));
-	statusPanel.setPosition(WINDOW_WIDTH - 270, 20); 
+	statusPanel.setPosition(windowWidth - statusPanel.getSize().x - 20, 20);
 	statusPanel.setFillColor(Color(0, 0, 0, 160));    // Fondo semitransparente
 	statusPanel.setOutlineColor(Color::White);
 	statusPanel.setOutlineThickness(1.5f);
 
 	//........................................................................
 
-
-	RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Templo");
-	window.setFramerateLimit(60);
 
 	RectangleShape energyBarBack(Vector2f(120, 12));
 	energyBarBack.setPosition(20, 10);
@@ -85,6 +88,57 @@ int main() {
 		cerr << "Error cargando fuente" << endl;
 		return -1;
 	}
+
+	// Pantalla de bienvenida
+	Text introTitle, introText, introHint;
+	introTitle.setFont(font);
+	introTitle.setCharacterSize(24);
+	introTitle.setFillColor(Color::Yellow);
+	introTitle.setString("TEMPLO - Aventura Hexagonal");
+	introTitle.setPosition(windowWidth / 2 - introTitle.getLocalBounds().width / 2, 100);
+
+	introText.setFont(font);
+	introText.setCharacterSize(16);
+	introText.setFillColor(Color::White);
+	introText.setLineSpacing(1.5f);
+	introText.setString(
+		"Explora el templo, evita el agua y alcanza el objetivo final.\n\n"
+		"Controles:\n"
+		"W/E = Arriba Diagonal\nA/D = Izquierda / Derecha\nZ/X = Abajo Diagonal\n\n"
+		"F = Ruta A* | R = Romper muro | M = Modo automático | ESC = Salir"
+	);
+	introText.setPosition(windowWidth / 2 - introText.getLocalBounds().width / 2, 200);
+
+	introHint.setFont(font);
+	introHint.setCharacterSize(14);
+	introHint.setFillColor(Color(180, 180, 180));
+	introHint.setString("Presiona ESPACIO para comenzar...");
+	introHint.setPosition(windowWidth / 2 - introHint.getLocalBounds().width / 2, 500);
+
+	window.clear(Color::Black);
+	window.draw(introTitle);
+	window.draw(introText);
+	window.draw(introHint);
+	window.display();
+
+	// Esperar ESPACIO para comenzar
+	bool esperandoInicio = true;
+	while (esperandoInicio) {
+		Event e;
+		while (window.pollEvent(e)) {
+			if (e.type == Event::Closed)
+				window.close();
+			if (e.type == Event::KeyPressed && e.key.code == Keyboard::Space)
+				esperandoInicio = false;
+		}
+	}
+
+	// Opcional: limpiar terminal al comenzar
+#ifdef _WIN32
+	system("cls");
+#else
+	system("clear");
+#endif
 
 
 
@@ -138,8 +192,8 @@ int main() {
 
 	float totalGridWidth = (GRID_COLS - 1) * (HEX_APOTHEM * 2 + HEX_SPACING) + HEX_APOTHEM * 2;
 	float totalGridHeight = (GRID_ROWS - 1) * (HEX_RADIUS * 1.5f + HEX_SPACING) + HEX_RADIUS * 2;
-	float offsetX = (WINDOW_WIDTH - totalGridWidth) / 2.f;
-	float offsetY = (WINDOW_HEIGHT - totalGridHeight) / 2.f;
+	float offsetX = (windowWidth - totalGridWidth) / 2.f;
+	float offsetY = (windowHeight - totalGridHeight) / 2.f;
 
 	// Guardar colores originales para restaurar después
 	vector<vector<Color>> originalColors(GRID_ROWS, vector<Color>(GRID_COLS));
@@ -241,7 +295,7 @@ int main() {
 		instructionsText.setCharacterSize(14);
 		instructionsText.setFillColor(Color(180, 180, 180));
 		instructionsText.setLineSpacing(1.3f);
-		instructionsText.setPosition(20, WINDOW_HEIGHT - 70);
+		instructionsText.setPosition(20, windowHeight - 70);
 		instructionsText.setString(
 			"Controles: W/E = Arriba diag | A/D = Izq/Der | Z/X = Abajo diag\n"
 			"F = Ruta A* | R = Romper muro | M = Auto | ESC = Salir"
@@ -501,7 +555,34 @@ int main() {
 					autoMoveClock.restart(); // reiniciar el reloj
 				}
 				else {
-					autoMoveEnabled = false; // detener movimiento si se bloquea
+
+					// Recalcular ruta automáticamente si el paso está bloqueado
+					cout << "?? Ruta bloqueada por agua. Recalculando..." << endl;
+
+					currentPath = findPathAStar(grid, player.row, player.col,
+						// encontrar la meta nuevamente
+						[&]() -> pair<int, int> {
+							for (int r = 0; r < GRID_ROWS; ++r)
+								for (int c = 0; c < GRID_COLS; ++c)
+									if (grid[r][c].isGoal)
+										return { r, c };
+							return { -1, -1 };
+						}().first,
+							[&]() -> pair<int, int> {
+							for (int r = 0; r < GRID_ROWS; ++r)
+								for (int c = 0; c < GRID_COLS; ++c)
+									if (grid[r][c].isGoal)
+										return { r, c };
+							return { -1, -1 };
+							}().second
+								);
+
+					autoMoveIndex = 1;
+					autoMoveEnabled = !currentPath.empty();
+
+					if (!autoMoveEnabled) {
+						cout << "? No hay ruta disponible, modo automático cancelado." << endl;
+					}
 				}
 			}
 		}

@@ -1,19 +1,17 @@
-﻿  AStarpathfinder.cpp
-C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\AStarpathfinder.cpp(13,14): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\AStarpathfinder.cpp(17,14): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\AStarpathfinder.cpp(55,14): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\AStarpathfinder.cpp(55,34): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
-  FileSelector.cpp
-  GameConstants.h
-  HexagonCell.cpp
-  loadMapSelector.cpp
-  main.cpp
-C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\main.cpp(118,16): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\main.cpp(119,16): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
-  MapLoader.cpp
-  UIHelper.cpp
-  Generando código...
-  Simu.vcxproj -> C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\x64\Debug\Simu.exe
+﻿  main.cpp
+C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(45,20): warning C4244: 'inicializando': conversión de 'T' a 'float'; posible pérdida de datos
+C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(45,20): warning C4244:         with
+C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(45,20): warning C4244:         [
+C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(45,20): warning C4244:             T=unsigned int
+C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(45,20): warning C4244:         ]
+C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(46,21): warning C4244: 'inicializando': conversión de 'T' a 'float'; posible pérdida de datos
+C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(46,21): warning C4244:         with
+C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(46,21): warning C4244:         [
+C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(46,21): warning C4244:             T=unsigned int
+C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(46,21): warning C4244:         ]
+C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(172,16): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(173,16): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+  Simu.vcxproj -> C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\x64\Debug\Simu.exe
   No se encuentra el archivo: *.ttf
   0 archivo(s) copiado(s)
   No se encuentra el archivo: *.dll

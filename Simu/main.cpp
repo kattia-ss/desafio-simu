@@ -17,11 +17,12 @@
 #include "MapLoader.h"
 #include "AStarPathfinder.h"
 #include "UIHelper.h"
+#include "loadMapSelector.h"
 
-#include "FileSelector.h"
+
+// #include "FileSelector.h"
 
 // delcaración de funciones auxiliares
-void showStartScreenWithFileSelector(RenderWindow& window, const Font& font, FileSelector& fileSelector);
 bool loadMapWithValidation(const string& filename, vector<vector<HexagonCell>>& grid);
 
 using namespace sf;
@@ -30,6 +31,7 @@ using namespace std;
 
 
 int main() {
+
 	//Para resolver automaticamente
 	bool showStartScreen = true;
 	bool autoMoveEnabled = false;
@@ -37,12 +39,17 @@ int main() {
 	Clock autoMoveClock;
 	const float AUTO_MOVE_INTERVAL = 0.3f; // segundos entre cada paso
 
+	RenderWindow window(VideoMode::getDesktopMode(), "Templo", Style::Fullscreen);
+	window.setFramerateLimit(60);
+
+	float windowWidth = window.getSize().x;
+	float windowHeight = window.getSize().y;
 
 	
 	// HUD retro visual.......................................................
 	RectangleShape hudPanel;
 	hudPanel.setSize(Vector2f(400, 200));  // Tamaño del HUD
-	hudPanel.setPosition(10, 5);           // Posición en pantalla
+	hudPanel.setPosition(20, 20);           // Posición en pantalla
 	hudPanel.setFillColor(Color(0, 0, 0, 160));     // Fondo negro semitransparente
 	hudPanel.setOutlineColor(Color::White);        // Borde blanco
 	hudPanel.setOutlineThickness(1.5f);            // Grosor del borde
@@ -50,16 +57,13 @@ int main() {
 
 	RectangleShape statusPanel;
 	statusPanel.setSize(Vector2f(250, 100));
-	statusPanel.setPosition(WINDOW_WIDTH - 270, 20); 
+	statusPanel.setPosition(windowWidth - statusPanel.getSize().x - 20, 20);
 	statusPanel.setFillColor(Color(0, 0, 0, 160));    // Fondo semitransparente
 	statusPanel.setOutlineColor(Color::White);
 	statusPanel.setOutlineThickness(1.5f);
 
 	//........................................................................
 
-
-	RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Templo");
-	window.setFramerateLimit(60);
 
 	RectangleShape energyBarBack(Vector2f(120, 12));
 	energyBarBack.setPosition(20, 10);
@@ -85,32 +89,85 @@ int main() {
 		return -1;
 	}
 
-	// seleccionar el archivo de mapa
-	FileSelector fileSelector;
-	string selectedMapFile = "mapa2.json"; // Por defecto
+	// Pantalla de bienvenida
+	Text introTitle, introText, introHint;
+	introTitle.setFont(font);
+	introTitle.setCharacterSize(24);
+	introTitle.setFillColor(Color::Yellow);
+	introTitle.setString("TEMPLO - Aventura Hexagonal");
+	introTitle.setPosition(windowWidth / 2 - introTitle.getLocalBounds().width / 2, 100);
 
-	if (showStartScreen) {
-		showStartScreenWithFileSelector(window, font, fileSelector);
+	introText.setFont(font);
+	introText.setCharacterSize(16);
+	introText.setFillColor(Color::White);
+	introText.setLineSpacing(1.5f);
+	introText.setString(
+		"Explora el templo, evita el agua y alcanza el objetivo final.\n\n"
+		"Controles:\n"
+		"W/E = Arriba Diagonal\nA/D = Izquierda / Derecha\nZ/X = Abajo Diagonal\n\n"
+		"F = Ruta A* | R = Romper muro | M = Modo automático | ESC = Salir"
+	);
+	introText.setPosition(windowWidth / 2 - introText.getLocalBounds().width / 2, 200);
 
-		// Obtener el archivo seleccionado
-		selectedMapFile = fileSelector.getSelectedFile();
-		if (selectedMapFile.empty()) {
-			selectedMapFile = "mapa2.json"; // Fallback al mapa por defecto
+	introHint.setFont(font);
+	introHint.setCharacterSize(14);
+	introHint.setFillColor(Color(180, 180, 180));
+	introHint.setString("Presiona ESPACIO para comenzar...");
+	introHint.setPosition(windowWidth / 2 - introHint.getLocalBounds().width / 2, 500);
+
+	window.clear(Color::Black);
+	window.draw(introTitle);
+	window.draw(introText);
+	window.draw(introHint);
+	window.display();
+
+	// Esperar ESPACIO para comenzar
+	bool esperandoInicio = true;
+	while (esperandoInicio) {
+		Event e;
+		while (window.pollEvent(e)) {
+			if (e.type == Event::Closed)
+				window.close();
+			if (e.type == Event::KeyPressed && e.key.code == Keyboard::Space)
+				esperandoInicio = false;
 		}
+	}
 
+	// Opcional: limpiar terminal al comenzar
+#ifdef _WIN32
+	system("cls");
+#else
+	system("clear");
+#endif
+
+
+
+	// Seleccionar mapa
+	string selectedMapFile;
+	cout << "==============================" << endl;
+	cout << " Ingrese la ruta del mapa:" << endl;
+	cout << " (o presione ENTER para usar 'mapa2.json')" << endl;
+	cout << "==============================" << endl;
+	getline(cin, selectedMapFile);
+
+	if (selectedMapFile.empty()) {
+		selectedMapFile = "mapa2.json";
+		cout << "Usando mapa por defecto: " << selectedMapFile << endl;
+	}
+	else {
 		cout << "Cargando mapa: " << selectedMapFile << endl;
 	}
 
-
+	// Cargar mapa con validación
 	vector<vector<HexagonCell>> grid;
 	if (!loadMapWithValidation(selectedMapFile, grid)) {
-		// Si falla, intentar cargar el mapa por defecto
 		cout << "Intentando cargar mapa por defecto..." << endl;
 		if (!loadMapWithValidation("mapa2.json", grid)) {
-			cerr << "Error crítico: No se pudo cargar ningún mapa válido" << endl;
+			cerr << "Error : No se pudo cargar ningún mapa válido" << endl;
 			return -1;
 		}
 	}
+
 
 	int GRID_ROWS = grid.size();
 	int GRID_COLS = grid[0].size();
@@ -135,8 +192,8 @@ int main() {
 
 	float totalGridWidth = (GRID_COLS - 1) * (HEX_APOTHEM * 2 + HEX_SPACING) + HEX_APOTHEM * 2;
 	float totalGridHeight = (GRID_ROWS - 1) * (HEX_RADIUS * 1.5f + HEX_SPACING) + HEX_RADIUS * 2;
-	float offsetX = (WINDOW_WIDTH - totalGridWidth) / 2.f;
-	float offsetY = (WINDOW_HEIGHT - totalGridHeight) / 2.f;
+	float offsetX = (windowWidth - totalGridWidth) / 2.f;
+	float offsetY = (windowHeight - totalGridHeight) / 2.f;
 
 	// Guardar colores originales para restaurar después
 	vector<vector<Color>> originalColors(GRID_ROWS, vector<Color>(GRID_COLS));
@@ -238,7 +295,7 @@ int main() {
 		instructionsText.setCharacterSize(14);
 		instructionsText.setFillColor(Color(180, 180, 180));
 		instructionsText.setLineSpacing(1.3f);
-		instructionsText.setPosition(20, WINDOW_HEIGHT - 70);
+		instructionsText.setPosition(20, windowHeight - 70);
 		instructionsText.setString(
 			"Controles: W/E = Arriba diag | A/D = Izq/Der | Z/X = Abajo diag\n"
 			"F = Ruta A* | R = Romper muro | M = Auto | ESC = Salir"
@@ -498,7 +555,34 @@ int main() {
 					autoMoveClock.restart(); // reiniciar el reloj
 				}
 				else {
-					autoMoveEnabled = false; // detener movimiento si se bloquea
+
+					// Recalcular ruta automáticamente si el paso está bloqueado
+					cout << "?? Ruta bloqueada por agua. Recalculando..." << endl;
+
+					currentPath = findPathAStar(grid, player.row, player.col,
+						// encontrar la meta nuevamente
+						[&]() -> pair<int, int> {
+							for (int r = 0; r < GRID_ROWS; ++r)
+								for (int c = 0; c < GRID_COLS; ++c)
+									if (grid[r][c].isGoal)
+										return { r, c };
+							return { -1, -1 };
+						}().first,
+							[&]() -> pair<int, int> {
+							for (int r = 0; r < GRID_ROWS; ++r)
+								for (int c = 0; c < GRID_COLS; ++c)
+									if (grid[r][c].isGoal)
+										return { r, c };
+							return { -1, -1 };
+							}().second
+								);
+
+					autoMoveIndex = 1;
+					autoMoveEnabled = !currentPath.empty();
+
+					if (!autoMoveEnabled) {
+						cout << "? No hay ruta disponible, modo automático cancelado." << endl;
+					}
 				}
 			}
 		}
@@ -604,124 +688,3 @@ int main() {
 	return 0;
 }
 
-void showStartScreenWithFileSelector(RenderWindow& window, const Font& font, FileSelector& fileSelector) {
-	Text title, controls, startPrompt, filePrompt;
-
-	// --- TÍTULO ---
-	title.setFont(font);
-	title.setString("TEMPLO: Escape del Hexamundo");
-	title.setCharacterSize(32);
-	title.setFillColor(Color::Yellow);
-	title.setOrigin(title.getLocalBounds().width / 2, 0);
-	title.setPosition(WINDOW_WIDTH / 2.f, 40);
-
-	// --- CONTROLES ---
-	controls.setFont(font);
-	controls.setCharacterSize(18);
-	controls.setFillColor(Color::White);
-	controls.setLineSpacing(1.3f);
-	controls.setString(
-		"CONTROLES DEL JUGADOR\n"
-		"W / E  = Diagonal arriba izq / der\n"
-		"A / D  = Izquierda / Derecha\n"
-		"Z / X  = Diagonal abajo izq / der\n"
-		"F      = Mostrar ruta A*\n"
-		"R      = Romper muro (energia completa)\n"
-		"M      = Modo automatico\n"
-		"ESC    = Salir"
-	);
-	controls.setOrigin(controls.getLocalBounds().width / 2, 0);
-	controls.setPosition(WINDOW_WIDTH / 2.f, 100);
-
-	// --- SELECCIÓN DE ARCHIVO ---
-	filePrompt.setFont(font);
-	filePrompt.setString("Presiona TAB para seleccionar mapa JSON");
-	filePrompt.setCharacterSize(16);
-	filePrompt.setFillColor(Color(150, 200, 255));
-	filePrompt.setOrigin(filePrompt.getLocalBounds().width / 2, 0);
-	filePrompt.setPosition(WINDOW_WIDTH / 2.f, WINDOW_HEIGHT - 120);
-
-	// --- MENSAJE DE INICIO ---
-	startPrompt.setFont(font);
-	startPrompt.setString("Presiona ENTER para comenzar...");
-	startPrompt.setCharacterSize(16);
-	startPrompt.setFillColor(Color(150, 255, 150));
-	startPrompt.setOrigin(startPrompt.getLocalBounds().width / 2, 0);
-	startPrompt.setPosition(WINDOW_WIDTH / 2.f, WINDOW_HEIGHT - 80);
-
-	// Mostrar archivo seleccionado
-	Text selectedFileText;
-	selectedFileText.setFont(font);
-	selectedFileText.setCharacterSize(14);
-	selectedFileText.setFillColor(Color::Cyan);
-	selectedFileText.setOrigin(selectedFileText.getLocalBounds().width / 2, 0);
-	selectedFileText.setPosition(WINDOW_WIDTH / 2.f, WINDOW_HEIGHT - 100);
-
-	while (window.isOpen()) {
-		Event e;
-		while (window.pollEvent(e)) {
-			if (e.type == Event::Closed) {
-				window.close();
-				return;
-			}
-
-			// Manejar input del selector de archivos
-			fileSelector.handleInput(e);
-
-			if (e.type == Event::KeyPressed) {
-				if (e.key.code == Keyboard::Tab && !fileSelector.isVisible()) {
-					fileSelector.show();
-				}
-				else if (e.key.code == Keyboard::Enter && !fileSelector.isVisible()) {
-					return; // Comenzar juego
-				}
-			}
-		}
-
-		// Actualizar texto del archivo seleccionado
-		string currentFile = fileSelector.getSelectedFile();
-		if (currentFile.empty()) currentFile = "mapa2.json";
-		selectedFileText.setString("Mapa: " + currentFile);
-		selectedFileText.setOrigin(selectedFileText.getLocalBounds().width / 2, 0);
-
-		window.clear(Color(30, 30, 30));
-
-		// Dibujar elementos de la pantalla principal
-		if (!fileSelector.isVisible()) {
-			window.draw(title);
-			window.draw(controls);
-			window.draw(filePrompt);
-			window.draw(selectedFileText);
-			window.draw(startPrompt);
-		}
-
-		// Dibujar selector de archivos encima si está visible
-		fileSelector.draw(window, font);
-
-		window.display();
-	}
-}
-
-// Función para cargar mapa con validación y manejo de errores
-bool loadMapWithValidation(const string& filename, vector<vector<HexagonCell>>& grid) {
-	FileSelector validator;
-
-	// Validar estructura del JSON
-	if (!validator.validateJsonStructure(filename)) {
-		cerr << "Error: El archivo " << filename << " no tiene una estructura JSON válida" << endl;
-		cerr << "El archivo debe contener: rows, cols, grid, heightMap" << endl;
-		cerr << "Y debe tener al menos un punto de inicio (S) y un objetivo (G)" << endl;
-		return false;
-	}
-
-	// Intentar cargar el mapa
-	if (!loadMapFromJson(filename, grid)) {
-		cerr << "Error: No se pudo cargar el archivo " << filename << endl;
-		return false;
-	}
-
-	cout << "? Mapa cargado exitosamente: " << filename << endl;
-	cout << "  Dimensiones: " << grid.size() << "x" << grid[0].size() << endl;
-
-	return true;
-}

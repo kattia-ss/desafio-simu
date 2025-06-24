@@ -42,7 +42,7 @@ Makefile
 *.old
 *.orig
 
-# Archivos SFML generados (si los compilas tú mismo)
+# Archivos SFML generados 
 SFML-*
 
 # Archivos de entorno de Windows

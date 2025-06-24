@@ -17,12 +17,15 @@
 #include "MapLoader.h"
 #include "AStarPathfinder.h"
 #include "UIHelper.h"
+#include "loadMapSelector.h"
 
-#include "FileSelector.h"
+
+// #include "FileSelector.h"
 
 // delcaración de funciones auxiliares
-void showStartScreenWithFileSelector(RenderWindow& window, const Font& font, FileSelector& fileSelector);
 bool loadMapWithValidation(const string& filename, vector<vector<HexagonCell>>& grid);
+string getUserInput(RenderWindow& window, const Font& font);
+
 
 using namespace sf;
 using namespace std;
@@ -85,32 +88,29 @@ int main() {
 		return -1;
 	}
 
-	// seleccionar el archivo de mapa
-	FileSelector fileSelector;
-	string selectedMapFile = "mapa2.json"; // Por defecto
 
+
+	// Seleccionar mapa
+	string selectedMapFile = "mapa2.json"; // fallback
 	if (showStartScreen) {
-		showStartScreenWithFileSelector(window, font, fileSelector);
-
-		// Obtener el archivo seleccionado
-		selectedMapFile = fileSelector.getSelectedFile();
+		selectedMapFile = getUserInput(window, font);
 		if (selectedMapFile.empty()) {
-			selectedMapFile = "mapa2.json"; // Fallback al mapa por defecto
+			selectedMapFile = "mapa2.json";
 		}
-
 		cout << "Cargando mapa: " << selectedMapFile << endl;
 	}
 
 
+
 	vector<vector<HexagonCell>> grid;
 	if (!loadMapWithValidation(selectedMapFile, grid)) {
-		// Si falla, intentar cargar el mapa por defecto
 		cout << "Intentando cargar mapa por defecto..." << endl;
 		if (!loadMapWithValidation("mapa2.json", grid)) {
 			cerr << "Error crítico: No se pudo cargar ningún mapa válido" << endl;
 			return -1;
 		}
 	}
+
 
 	int GRID_ROWS = grid.size();
 	int GRID_COLS = grid[0].size();
@@ -604,124 +604,46 @@ int main() {
 	return 0;
 }
 
-void showStartScreenWithFileSelector(RenderWindow& window, const Font& font, FileSelector& fileSelector) {
-	Text title, controls, startPrompt, filePrompt;
+string getUserInput(RenderWindow& window, const Font& font) {
+	string input;
+	Text inputText;
+	inputText.setFont(font);
+	inputText.setCharacterSize(18);
+	inputText.setFillColor(Color::White);
+	inputText.setPosition(100, 300);
 
-	// --- TÍTULO ---
-	title.setFont(font);
-	title.setString("TEMPLO: Escape del Hexamundo");
-	title.setCharacterSize(32);
-	title.setFillColor(Color::Yellow);
-	title.setOrigin(title.getLocalBounds().width / 2, 0);
-	title.setPosition(WINDOW_WIDTH / 2.f, 40);
-
-	// --- CONTROLES ---
-	controls.setFont(font);
-	controls.setCharacterSize(18);
-	controls.setFillColor(Color::White);
-	controls.setLineSpacing(1.3f);
-	controls.setString(
-		"CONTROLES DEL JUGADOR\n"
-		"W / E  = Diagonal arriba izq / der\n"
-		"A / D  = Izquierda / Derecha\n"
-		"Z / X  = Diagonal abajo izq / der\n"
-		"F      = Mostrar ruta A*\n"
-		"R      = Romper muro (energia completa)\n"
-		"M      = Modo automatico\n"
-		"ESC    = Salir"
-	);
-	controls.setOrigin(controls.getLocalBounds().width / 2, 0);
-	controls.setPosition(WINDOW_WIDTH / 2.f, 100);
-
-	// --- SELECCIÓN DE ARCHIVO ---
-	filePrompt.setFont(font);
-	filePrompt.setString("Presiona TAB para seleccionar mapa JSON");
-	filePrompt.setCharacterSize(16);
-	filePrompt.setFillColor(Color(150, 200, 255));
-	filePrompt.setOrigin(filePrompt.getLocalBounds().width / 2, 0);
-	filePrompt.setPosition(WINDOW_WIDTH / 2.f, WINDOW_HEIGHT - 120);
-
-	// --- MENSAJE DE INICIO ---
-	startPrompt.setFont(font);
-	startPrompt.setString("Presiona ENTER para comenzar...");
-	startPrompt.setCharacterSize(16);
-	startPrompt.setFillColor(Color(150, 255, 150));
-	startPrompt.setOrigin(startPrompt.getLocalBounds().width / 2, 0);
-	startPrompt.setPosition(WINDOW_WIDTH / 2.f, WINDOW_HEIGHT - 80);
-
-	// Mostrar archivo seleccionado
-	Text selectedFileText;
-	selectedFileText.setFont(font);
-	selectedFileText.setCharacterSize(14);
-	selectedFileText.setFillColor(Color::Cyan);
-	selectedFileText.setOrigin(selectedFileText.getLocalBounds().width / 2, 0);
-	selectedFileText.setPosition(WINDOW_WIDTH / 2.f, WINDOW_HEIGHT - 100);
+	Text instruction;
+	instruction.setFont(font);
+	instruction.setCharacterSize(14);
+	instruction.setFillColor(Color::Yellow);
+	instruction.setString("Ingrese ruta al archivo .json y presione ENTER:");
+	instruction.setPosition(100, 260);
 
 	while (window.isOpen()) {
-		Event e;
-		while (window.pollEvent(e)) {
-			if (e.type == Event::Closed) {
+		Event event;
+		while (window.pollEvent(event)) {
+			if (event.type == Event::Closed)
 				window.close();
-				return;
-			}
 
-			// Manejar input del selector de archivos
-			fileSelector.handleInput(e);
-
-			if (e.type == Event::KeyPressed) {
-				if (e.key.code == Keyboard::Tab && !fileSelector.isVisible()) {
-					fileSelector.show();
+			if (event.type == Event::TextEntered) {
+				if (event.text.unicode == '\b' && !input.empty()) {
+					input.pop_back();
 				}
-				else if (e.key.code == Keyboard::Enter && !fileSelector.isVisible()) {
-					return; // Comenzar juego
+				else if (event.text.unicode == '\r' || event.text.unicode == '\n') {
+					return input;
+				}
+				else if (event.text.unicode < 128 && event.text.unicode != '\b') {
+					input += static_cast<char>(event.text.unicode);
 				}
 			}
 		}
 
-		// Actualizar texto del archivo seleccionado
-		string currentFile = fileSelector.getSelectedFile();
-		if (currentFile.empty()) currentFile = "mapa2.json";
-		selectedFileText.setString("Mapa: " + currentFile);
-		selectedFileText.setOrigin(selectedFileText.getLocalBounds().width / 2, 0);
-
-		window.clear(Color(30, 30, 30));
-
-		// Dibujar elementos de la pantalla principal
-		if (!fileSelector.isVisible()) {
-			window.draw(title);
-			window.draw(controls);
-			window.draw(filePrompt);
-			window.draw(selectedFileText);
-			window.draw(startPrompt);
-		}
-
-		// Dibujar selector de archivos encima si está visible
-		fileSelector.draw(window, font);
-
+		inputText.setString(input);
+		window.clear(Color::Black);
+		window.draw(instruction);
+		window.draw(inputText);
 		window.display();
 	}
-}
 
-// Función para cargar mapa con validación y manejo de errores
-bool loadMapWithValidation(const string& filename, vector<vector<HexagonCell>>& grid) {
-	FileSelector validator;
-
-	// Validar estructura del JSON
-	if (!validator.validateJsonStructure(filename)) {
-		cerr << "Error: El archivo " << filename << " no tiene una estructura JSON válida" << endl;
-		cerr << "El archivo debe contener: rows, cols, grid, heightMap" << endl;
-		cerr << "Y debe tener al menos un punto de inicio (S) y un objetivo (G)" << endl;
-		return false;
-	}
-
-	// Intentar cargar el mapa
-	if (!loadMapFromJson(filename, grid)) {
-		cerr << "Error: No se pudo cargar el archivo " << filename << endl;
-		return false;
-	}
-
-	cout << "? Mapa cargado exitosamente: " << filename << endl;
-	cout << "  Dimensiones: " << grid.size() << "x" << grid[0].size() << endl;
-
-	return true;
+	return "mapa2.json"; // fallback
 }

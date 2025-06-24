@@ -2,15 +2,15 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\ksant\OneDrive\Documentos\UCA 2022-2026\Ciclo VII\técnicas de simulación en computadoras\desafio-simu\Simu\x64\Debug\Simu.exe</FullPath>
+      <FullPath>C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\x64\Debug\Simu.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Users\ksant\OneDrive\Documentos\UCA 2022-2026\Ciclo VII\técnicas de simulación en computadoras\desafio-simu\Simu\arial.ttf</FullPath>
+      <FullPath>C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\arial.ttf</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\ksant\OneDrive\Documentos\UCA 2022-2026\Ciclo VII\técnicas de simulación en computadoras\desafio-simu\Simu\fonts\PRESSSTART2P.ttf</FullPath>
+      <FullPath>C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\fonts\PRESSSTART2P.ttf</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

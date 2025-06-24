@@ -150,6 +150,7 @@ sfml-system-d.lib</AdditionalDependencies>
     <ClCompile Include="FileSelector.cpp" />
     <ClCompile Include="GameConstants.h" />
     <ClCompile Include="HexagonCell.cpp" />
+    <ClCompile Include="loadMapSelector.cpp" />
     <ClCompile Include="main.cpp">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </DeploymentContent>
@@ -162,6 +163,7 @@ sfml-system-d.lib</AdditionalDependencies>
     <ClInclude Include="FileSelector.h" />
     <ClInclude Include="HexagonCell.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="loadMapSelector.h" />
     <ClInclude Include="MapLoader.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="UIHelper.h" />

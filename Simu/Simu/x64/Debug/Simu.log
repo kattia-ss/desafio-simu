@@ -8,8 +8,8 @@ C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\AStarpathfinder.cpp(55,34): wa
   HexagonCell.cpp
   loadMapSelector.cpp
   main.cpp
-C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\main.cpp(115,16): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\main.cpp(116,16): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\main.cpp(118,16): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\main.cpp(119,16): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
   MapLoader.cpp
   UIHelper.cpp
   Generando código...

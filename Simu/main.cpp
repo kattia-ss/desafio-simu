@@ -24,8 +24,6 @@
 
 // delcaración de funciones auxiliares
 bool loadMapWithValidation(const string& filename, vector<vector<HexagonCell>>& grid);
-string getUserInput(RenderWindow& window, const Font& font);
-
 
 using namespace sf;
 using namespace std;
@@ -91,22 +89,27 @@ int main() {
 
 
 	// Seleccionar mapa
-	string selectedMapFile = "mapa2.json"; // fallback
-	if (showStartScreen) {
-		selectedMapFile = getUserInput(window, font);
-		if (selectedMapFile.empty()) {
-			selectedMapFile = "mapa2.json";
-		}
+	string selectedMapFile;
+	cout << "==============================" << endl;
+	cout << " Ingrese la ruta del mapa:" << endl;
+	cout << " (o presione ENTER para usar 'mapa2.json')" << endl;
+	cout << "==============================" << endl;
+	getline(cin, selectedMapFile);
+
+	if (selectedMapFile.empty()) {
+		selectedMapFile = "mapa2.json";
+		cout << "Usando mapa por defecto: " << selectedMapFile << endl;
+	}
+	else {
 		cout << "Cargando mapa: " << selectedMapFile << endl;
 	}
 
-
-
+	// Cargar mapa con validación
 	vector<vector<HexagonCell>> grid;
 	if (!loadMapWithValidation(selectedMapFile, grid)) {
 		cout << "Intentando cargar mapa por defecto..." << endl;
 		if (!loadMapWithValidation("mapa2.json", grid)) {
-			cerr << "Error crítico: No se pudo cargar ningún mapa válido" << endl;
+			cerr << "Error : No se pudo cargar ningún mapa válido" << endl;
 			return -1;
 		}
 	}
@@ -604,46 +607,3 @@ int main() {
 	return 0;
 }
 
-string getUserInput(RenderWindow& window, const Font& font) {
-	string input;
-	Text inputText;
-	inputText.setFont(font);
-	inputText.setCharacterSize(18);
-	inputText.setFillColor(Color::White);
-	inputText.setPosition(100, 300);
-
-	Text instruction;
-	instruction.setFont(font);
-	instruction.setCharacterSize(14);
-	instruction.setFillColor(Color::Yellow);
-	instruction.setString("Ingrese ruta al archivo .json y presione ENTER:");
-	instruction.setPosition(100, 260);
-
-	while (window.isOpen()) {
-		Event event;
-		while (window.pollEvent(event)) {
-			if (event.type == Event::Closed)
-				window.close();
-
-			if (event.type == Event::TextEntered) {
-				if (event.text.unicode == '\b' && !input.empty()) {
-					input.pop_back();
-				}
-				else if (event.text.unicode == '\r' || event.text.unicode == '\n') {
-					return input;
-				}
-				else if (event.text.unicode < 128 && event.text.unicode != '\b') {
-					input += static_cast<char>(event.text.unicode);
-				}
-			}
-		}
-
-		inputText.setString(input);
-		window.clear(Color::Black);
-		window.draw(instruction);
-		window.draw(inputText);
-		window.display();
-	}
-
-	return "mapa2.json"; // fallback
-}

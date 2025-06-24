@@ -50,9 +50,9 @@
               "Title": "main.cpp",
               "DocumentMoniker": "C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
-              "ToolTip": "C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\main.cpp",
-              "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAAEsAAAAAAAAAAAAAAF4AAAAXAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Andre\u00E9 Torres\\Desktop\\desafio-simu\\Simu\\main.cpp*",
+              "RelativeToolTip": "main.cpp*",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAAAHcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-06-15T19:34:08.533Z",
               "IsPinned": true,
@@ -68,8 +68,7 @@
               "RelativeToolTip": "MapLoader.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-24T10:39:11.781Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-24T10:39:11.781Z"
             },
             {
               "$type": "Document",
@@ -81,8 +80,7 @@
               "RelativeToolTip": "loadMapSelector.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-24T10:34:09.753Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-24T10:34:09.753Z"
             },
             {
               "$type": "Document",
@@ -94,8 +92,7 @@
               "RelativeToolTip": "loadMapSelector.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-24T10:32:40.431Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-24T10:32:40.431Z"
             },
             {
               "$type": "Document",
@@ -107,8 +104,7 @@
               "RelativeToolTip": "MapLoader.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-24T10:16:54.25Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-24T10:16:54.25Z"
             },
             {
               "$type": "Document",
@@ -120,8 +116,7 @@
               "RelativeToolTip": "FileSelector.cpp",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAAAsAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-23T06:08:28.148Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-23T06:08:28.148Z"
             },
             {
               "$type": "Document",
@@ -133,8 +128,7 @@
               "RelativeToolTip": "FileSelector.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-23T05:47:29.324Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-23T05:47:29.324Z"
             },
             {
               "$type": "Document",

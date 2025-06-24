@@ -42,8 +42,7 @@ Makefile
 *.old
 *.orig
 
-# Archivos SFML generados 
-SFML-*
+
 
 # Archivos de entorno de Windows
 Thumbs.db

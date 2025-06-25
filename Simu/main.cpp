@@ -45,6 +45,10 @@ int main() {
 	float windowWidth = window.getSize().x;
 	float windowHeight = window.getSize().y;
 
+	View view(FloatRect(0, 0, windowWidth, windowHeight));
+	view.setCenter(windowWidth / 2, windowHeight / 2);
+	window.setView(view);
+
 	
 	// HUD retro visual.......................................................
 	RectangleShape hudPanel;
@@ -66,11 +70,11 @@ int main() {
 
 
 	RectangleShape energyBarBack(Vector2f(120, 12));
-	energyBarBack.setPosition(20, 10);
+	energyBarBack.setPosition(hudPanel.getPosition().x + 10, hudPanel.getPosition().y + 170);
 	energyBarBack.setFillColor(Color(50, 50, 50));
 
 	RectangleShape energyBarFill(Vector2f(0, 12));
-	energyBarFill.setPosition(20, 10);
+	energyBarFill.setPosition(hudPanel.getPosition().x + 10, hudPanel.getPosition().y + 170);
 	energyBarFill.setFillColor(Color(0, 200, 255));
 
 
@@ -202,10 +206,15 @@ int main() {
 			grid[r][c].setScreenPosition(c, r, offsetX, offsetY);
 
 			if (!grid[r][c].isWall && !grid[r][c].isStart && !grid[r][c].isGoal && !grid[r][c].isItem) {
-				int height = grid[r][c].height;
-				int greenValue = 100 + (height * 30);
-				if (greenValue > 255) greenValue = 255;
-				Color cellColor = Color(50, greenValue, 50);
+				int minH = 0, maxH = 60; // Ajusta según el máximo de tu mapa
+				float ratio = static_cast<float>(grid[r][c].height - minH) / (maxH - minH);
+				ratio = std::clamp(ratio, 0.f, 1.f);
+
+				int rColor = static_cast<int>(20 + 30 * ratio);   // menos rojo
+				int gColor = static_cast<int>(140 + 115 * ratio); // verde más brillante (hasta 255)
+				int bColor = static_cast<int>(20 + 30 * (1 - ratio)); // azul muy tenue
+
+				Color cellColor(rColor, gColor, bColor);
 				grid[r][c].setFillColor(cellColor);
 				originalColors[r][c] = cellColor;
 			}
@@ -243,6 +252,9 @@ int main() {
 		float hudX = hudPanel.getPosition().x + 10;
 		float hudY = hudPanel.getPosition().y + 10;
 
+		// Posicionar barra después del último texto
+		float energyBarY = hudY + 130 + 30;  // 130 por los textos, +30 de separación
+
 		// Puntuación
 		scoreText.setFont(font);
 		scoreText.setCharacterSize(18);
@@ -250,8 +262,8 @@ int main() {
 		scoreText.setPosition(hudX, hudY);
 
 		// Barra de energía
-		energyBarBack.setPosition(hudX, hudY + 22);
-		energyBarFill.setPosition(hudX, hudY + 22);
+		energyBarBack.setPosition(hudX, energyBarY);
+energyBarFill.setPosition(hudX, energyBarY);
 
 		// Texto de energía
 		energyText.setFont(font);
@@ -308,6 +320,7 @@ int main() {
 
 	// inicio del programa principal
 	while (window.isOpen()) {
+		window.setView(view);
 		Event event;
 		while (window.pollEvent(event)) {
 			if (event.type == Event::KeyPressed) {
@@ -376,6 +389,16 @@ int main() {
 					lastMoveDir = make_pair(1, isEvenRow ? 0 : 1);
 				}
 
+				if (event.key.code == Keyboard::O) {
+					view.zoom(0.9f); // Zoom in
+					window.setView(view);
+				}
+				else if (event.key.code == Keyboard::L) {
+					view.zoom(1.1f); // Zoom out
+					window.setView(view);
+				}
+
+
 				if (newRow >= 0 && newRow < GRID_ROWS &&
 					newCol >= 0 && newCol < GRID_COLS &&
 					!grid[newRow][newCol].isWall &&
@@ -423,6 +446,7 @@ int main() {
 								cout << "Celdas visitadas: " << visited.size() << endl;
 								cout << "Eficiencia: " << (visited.size() > 0 ? (float)score / visited.size() : 0)
 									<< " puntos por celda" << endl;
+								window.setView(window.getDefaultView());
 								showEndScreen(window, "Felicidades ganaste", font);
 							}
 						}
@@ -456,23 +480,27 @@ int main() {
 				}
 				//para resolver automatico cuando presione la letra M 
 				else if (event.key.code == Keyboard::M) {
-					// Restaurar colores pero no cuando se rompe un muro obvi duh
-					for (int r = 0; r < GRID_ROWS; ++r) {
-						for (int c = 0; c < GRID_COLS; ++c) {
-							if (!grid[r][c].isFlooded && !grid[r][c].isWall) {
-								grid[r][c].setFillColor(originalColors[r][c]);
-							}
-						}
+					if (autoMoveEnabled) {
+						// Si ya está activo, desactivar modo automático
+						autoMoveEnabled = false;
+						cout << "?? Modo automático DESACTIVADO\n";
 					}
-
-					// Buscar el objetivo
-					for (int r = 0; r < GRID_ROWS; ++r) {
-						for (int c = 0; c < GRID_COLS; ++c) {
-							if (grid[r][c].isGoal) {
-								currentPath = findPathAStar(grid, player.row, player.col, r, c);
-								autoMoveIndex = 1;
-								autoMoveEnabled = !currentPath.empty();
-								break;
+					else {
+						// Calcular nueva ruta y activar
+						for (int r = 0; r < GRID_ROWS; ++r) {
+							for (int c = 0; c < GRID_COLS; ++c) {
+								if (grid[r][c].isGoal) {
+									currentPath = findPathAStar(grid, player.row, player.col, r, c);
+									autoMoveIndex = 1;
+									autoMoveEnabled = !currentPath.empty();
+									if (autoMoveEnabled) {
+										cout << "?? Modo automático ACTIVADO\n";
+									}
+									else {
+										cout << "?? No se pudo calcular ruta automática\n";
+									}
+									break;
+								}
 							}
 						}
 					}
@@ -519,6 +547,7 @@ int main() {
 			cout << "Puntuación final: " << score << " puntos" << endl;
 			cout << "Celdas visitadas: " << visited.size() << endl;
 			cout << "Causa: El agua te alcanzó" << endl;
+			window.setView(window.getDefaultView());
 			showEndScreen(window, "GAME OVER", font);
 		}
 
@@ -619,8 +648,7 @@ int main() {
 
 		// Dibujar la barra de energía
 		energyBarFill.setSize(Vector2f(120 * (static_cast<float>(energy) / MAX_ENERGY), 12));
-		window.draw(energyBarBack);
-		window.draw(energyBarFill);
+	
 
 		// Actualizar y dibujar textos de información solo si la fuente se cargó
 		if (fontLoaded) {
@@ -663,6 +691,12 @@ int main() {
 			statusInfo += "Eficiencia:\n" + to_string((int)efficiency) + " pts/celda";
 
 			statusText.setString(statusInfo);
+
+
+			window.setView(window.getDefaultView());
+			//barra de energia
+			window.draw(energyBarBack);
+			window.draw(energyBarFill);
 
 			// Dibujar HUD principal
 			window.draw(hudPanel);

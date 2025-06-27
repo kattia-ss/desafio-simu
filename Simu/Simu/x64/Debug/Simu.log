@@ -1,19 +1,31 @@
-﻿  main.cpp
-C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(45,20): warning C4244: 'inicializando': conversión de 'T' a 'float'; posible pérdida de datos
-C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(45,20): warning C4244:         with
-C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(45,20): warning C4244:         [
-C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(45,20): warning C4244:             T=unsigned int
-C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(45,20): warning C4244:         ]
-C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(46,21): warning C4244: 'inicializando': conversión de 'T' a 'float'; posible pérdida de datos
-C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(46,21): warning C4244:         with
-C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(46,21): warning C4244:         [
-C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(46,21): warning C4244:             T=unsigned int
-C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(46,21): warning C4244:         ]
-C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(176,16): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\main.cpp(177,16): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
-  Simu.vcxproj -> C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\x64\Debug\Simu.exe
-  No se encuentra el archivo: *.ttf
-  0 archivo(s) copiado(s)
-  No se encuentra el archivo: *.dll
-  0 archivo(s) copiado(s)
-  8 archivo(s) copiado(s)
+﻿  AStarpathfinder.cpp
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\AStarpathfinder.cpp(13,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\AStarpathfinder.cpp(17,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\AStarpathfinder.cpp(55,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\AStarpathfinder.cpp(55,34): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  FileSelector.cpp
+  GameConstants.h
+  HexagonCell.cpp
+  loadMapSelector.cpp
+  main.cpp
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(61,20): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(61,20): warning C4244:         with
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(61,20): warning C4244:         [
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(61,20): warning C4244:             T=unsigned int
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(61,20): warning C4244:         ]
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(62,21): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(62,21): warning C4244:         with
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(62,21): warning C4244:         [
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(62,21): warning C4244:             T=unsigned int
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(62,21): warning C4244:         ]
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(178,16): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(179,16): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  MapLoader.cpp
+  UIHelper.cpp
+  Generating Code...
+  Simu.vcxproj -> C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\x64\Debug\Simu.exe
+  File not found - *.ttf
+  0 File(s) copied
+  File not found - *.dll
+  0 File(s) copied
+  6 File(s) copied

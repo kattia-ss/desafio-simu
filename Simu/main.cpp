@@ -39,6 +39,22 @@ int main() {
 	Clock autoMoveClock;
 	const float AUTO_MOVE_INTERVAL = 0.3f; // segundos entre cada paso
 
+	// Seleccionar mapa
+	string selectedMapFile;
+	cout << "==============================" << endl;
+	cout << " Ingrese la ruta del mapa:" << endl;
+	cout << " (o presione ENTER para usar 'mapa2.json')" << endl;
+	cout << "==============================" << endl;
+	getline(cin, selectedMapFile);
+
+	if (selectedMapFile.empty()) {
+		selectedMapFile = "mapa2.json";
+		cout << "Usando mapa por defecto: " << selectedMapFile << endl;
+	}
+	else {
+		cout << "Cargando mapa: " << selectedMapFile << endl;
+	}
+
 	RenderWindow window(VideoMode::getDesktopMode(), "Templo", Style::Fullscreen);
 	window.setFramerateLimit(60);
 
@@ -146,21 +162,7 @@ int main() {
 
 
 
-	// Seleccionar mapa
-	string selectedMapFile;
-	cout << "==============================" << endl;
-	cout << " Ingrese la ruta del mapa:" << endl;
-	cout << " (o presione ENTER para usar 'mapa2.json')" << endl;
-	cout << "==============================" << endl;
-	getline(cin, selectedMapFile);
-
-	if (selectedMapFile.empty()) {
-		selectedMapFile = "mapa2.json";
-		cout << "Usando mapa por defecto: " << selectedMapFile << endl;
-	}
-	else {
-		cout << "Cargando mapa: " << selectedMapFile << endl;
-	}
+	
 
 	// Cargar mapa con validación
 	vector<vector<HexagonCell>> grid;

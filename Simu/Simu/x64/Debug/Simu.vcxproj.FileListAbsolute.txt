@@ -1,2 +1,3 @@
 C:\Users\Andreé Torres\Desktop\desafio-simu\Simu\x64\Debug\fonts\PRESSSTART2P.TTF
 C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\x64\Debug\fonts\PRESSSTART2P.TTF
+C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\x64\Debug\fonts\PRESSSTART2P.TTF

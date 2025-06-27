@@ -2,15 +2,15 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\x64\Debug\Simu.exe</FullPath>
+      <FullPath>C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\x64\Debug\Simu.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\arial.ttf</FullPath>
+      <FullPath>C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\arial.ttf</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\fonts\PRESSSTART2P.ttf</FullPath>
+      <FullPath>C:\Users\juanc\OneDrive\Desktop\Desafio Simu\Simu\fonts\PRESSSTART2P.ttf</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

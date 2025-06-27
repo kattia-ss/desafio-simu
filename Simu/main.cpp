@@ -644,7 +644,7 @@ energyBarFill.setPosition(hudX, energyBarY);
 			if (!grid[r][c].isStart && !grid[r][c].isGoal && !grid[r][c].isFlooded) {
 				// Crear un hexágono temporal para la ruta
 				HexagonCell pathCell = grid[r][c];
-				pathCell.setFillColor(Color(255, 165, 0, 180)); // Naranja semitransparente
+				pathCell.setFillColor(Color(0, 200, 100, 180)); // Verde semitransparente
 				window.draw(pathCell);
 			}
 		}

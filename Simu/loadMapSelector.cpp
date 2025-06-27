@@ -40,21 +40,24 @@ bool loadMapWithValidation(const string& filename, vector<vector<HexagonCell>>& 
             }
         }
 
-        // Verificar que haya al menos un punto de inicio y uno de objetivo
-        bool hasStart = false, hasGoal = false;
+        // Contadores para validar que solo haya una 'S' y una 'G'
+        int startCount = 0;
+        int goalCount = 0;
+
         for (int r = 0; r < rows; ++r) {
             for (int c = 0; c < cols; ++c) {
                 string cell = j["grid"][r][c];
                 if (!cell.empty()) {
                     char symbol = cell[0];
-                    if (symbol == 'S') hasStart = true;
-                    if (symbol == 'G') hasGoal = true;
+                    if (symbol == 'S') startCount++;
+                    if (symbol == 'G') goalCount++;
                 }
             }
         }
 
-        if (!hasStart || !hasGoal) {
-            cout << "Error: El mapa debe tener al menos una celda 'S' y una 'G'." << endl;
+        if (startCount != 1 || goalCount != 1) {
+            cout << "Error: El mapa debe tener exactamente UNA celda 'S' y UNA celda 'G'." << endl;
+            cout << "Encontradas: S=" << startCount << ", G=" << goalCount << endl;
             return false;
         }
 

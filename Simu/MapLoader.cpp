@@ -23,41 +23,57 @@ bool loadMapFromJson(const string& filename, vector<vector<HexagonCell>>& grid) 
 
     grid.resize(rows, vector<HexagonCell>(cols));
 
-    for (int r = 0; r < rows; ++r) {
-        for (int c = 0; c < cols; ++c) {
-            char symbol = mapGrid[r][c].get<string>()[0];
-            int height = heightMap[r][c];
+    try {
 
-            HexagonCell cell;
-            cell.q = c;
-            cell.r = r;
-            cell.height = height;
 
-            switch (symbol) {
-            case 'S':
-                cell.setFillColor(Color::Green);
-                cell.isStart = true;
-                break;
-            case 'G':
-                cell.setFillColor(Color::Red);
-                cell.isGoal = true;
-                break;
-            case 'K':
-                cell.setFillColor(Color::Yellow);
-                cell.isItem = true;
-                break;
-            case '#':
-                cell.setFillColor(Color(243,141,60));
-                cell.isWall = true;
-                break;
-            case '.':
-            default:
-                cell.setFillColor(Color::White);
-                break;
+        for (int r = 0; r < rows; ++r) {
+            for (int c = 0; c < cols; ++c) {
+                if (!mapGrid[r][c].is_string() || mapGrid[r][c].get<string>().empty()) {
+                    cerr << "Error: Celda (" << r << "," << c << ") no es string o está vacía\n";
+                    return false;
+                }
+                char symbol = mapGrid[r][c].get<string>()[0];
+
+                int height = heightMap[r][c];
+
+                HexagonCell cell;
+                cell.q = c;
+                cell.r = r;
+                cell.height = height;
+
+                switch (symbol) {
+                case 'S':
+                    cell.setFillColor(Color::Green);
+                    cell.isStart = true;
+                    break;
+                case 'G':
+                    cell.setFillColor(Color::Red);
+                    cell.isGoal = true;
+                    break;
+                case 'K':
+                    cell.setFillColor(Color::Yellow);
+                    cell.isItem = true;
+                    break;
+                case '#':
+                    cell.setFillColor(Color(243, 141, 60));
+                    cell.isWall = true;
+                    break;
+                case '.':
+                default:
+                    cell.setFillColor(Color::White);
+                    break;
+                }
+
+                grid[r][c] = cell;
             }
-
-            grid[r][c] = cell;
         }
+
+        //aqui termina el try
+
+    }
+    catch (const exception& ex) {
+        cerr << "Excepción al procesar el mapa: " << ex.what() << endl;
+        return false;
     }
 
     return true;

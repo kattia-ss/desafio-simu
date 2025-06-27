@@ -112,9 +112,9 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\SFML\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-d.lib;
-sfml-window-d.lib;
-sfml-system-d.lib</AdditionalDependencies>
+      <AdditionalDependencies>  sfml-graphics.lib;
+  sfml-window.lib;
+  sfml-system.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>cd /d "$(ProjectDir)resources" &amp;&amp; xcopy /Y /I /Q *.ttf "$(OutDir)" &amp;&amp; xcopy /Y /I /Q *.dll "$(OutDir)" &amp;&amp; xcopy /Y /I /Q *.json "$(OutDir)"
@@ -129,16 +129,16 @@ sfml-system-d.lib</AdditionalDependencies>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>C:\SFML\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\SFML\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-d.lib;
-sfml-window-d.lib;
-sfml-system-d.lib</AdditionalDependencies>
+      <AdditionalDependencies>sfml-graphics.lib;
+sfml-window.lib;
+sfml-system.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>cd /d "$(ProjectDir)resources" &amp;&amp; xcopy /Y /I /Q *.ttf "$(OutDir)" &amp;&amp; xcopy /Y /I /Q *.dll "$(OutDir)" &amp;&amp; xcopy /Y /I /Q *.json "$(OutDir)"

@@ -161,23 +161,29 @@ int main() {
 	system("clear");
 #endif
 
-
-
-	
-
 	// Cargar mapa con validación
 	vector<vector<HexagonCell>> grid;
 	if (!loadMapWithValidation(selectedMapFile, grid)) {
 		cout << "Intentando cargar mapa por defecto..." << endl;
 		if (!loadMapWithValidation("mapa2.json", grid)) {
 			cerr << "Error : No se pudo cargar ningún mapa válido" << endl;
+			system("pause"); // <- agrega esto para ver el error en consola
 			return -1;
 		}
+	}
+
+	if (grid.empty() || grid[0].empty()) {
+		cerr << "Error: el mapa se cargó pero la grilla está vacía o corrupta.\n";
+		system("pause");
+		return -1;
 	}
 
 
 	int GRID_ROWS = grid.size();
 	int GRID_COLS = grid[0].size();
+
+	
+
 
 	Player player;
 	bool startFound = false;

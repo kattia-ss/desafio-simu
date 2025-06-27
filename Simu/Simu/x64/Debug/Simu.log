@@ -1,12 +1,4 @@
-﻿  AStarpathfinder.cpp
-C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\AStarpathfinder.cpp(13,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\AStarpathfinder.cpp(17,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\AStarpathfinder.cpp(55,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\AStarpathfinder.cpp(55,34): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  FileSelector.cpp
-  GameConstants.h
-  HexagonCell.cpp
-  loadMapSelector.cpp
+﻿  MapLoader.cpp
   main.cpp
 C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(61,20): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
 C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(61,20): warning C4244:         with
@@ -20,8 +12,6 @@ C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(62,21): warning C4
 C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(62,21): warning C4244:         ]
 C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(178,16): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\main.cpp(179,16): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  MapLoader.cpp
-  UIHelper.cpp
   Generating Code...
   Simu.vcxproj -> C:\Users\ksant\OneDrive\Escritorio\desafio-simu\Simu\x64\Debug\Simu.exe
   File not found - *.ttf

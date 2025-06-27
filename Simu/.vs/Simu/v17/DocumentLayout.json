@@ -7,20 +7,32 @@
       "RelativeMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\UIHelper.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|solutionrelative:UIHelper.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\MapLoader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|solutionrelative:MapLoader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\UIHelper.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|solutionrelative:UIHelper.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\loadMapSelector.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|solutionrelative:loadMapSelector.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\HexagonCell.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|solutionrelative:HexagonCell.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\FileSelector.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|solutionrelative:FileSelector.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\AStarPathfinder.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|solutionrelative:AStarPathfinder.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|solutionrelative:Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\MapLoader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -29,10 +41,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\loadMapSelector.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|solutionrelative:loadMapSelector.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\AStarPathfinder.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|solutionrelative:AStarPathfinder.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{33C28DA1-A0E9-42E4-9DEB-38AB05DFAC05}|Simu.vcxproj|C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\FileSelector.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -54,9 +62,9 @@
               "Title": "main.cpp",
               "DocumentMoniker": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
-              "ToolTip": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\main.cpp*",
-              "RelativeToolTip": "main.cpp*",
-              "ViewState": "AgIAACIAAAAAAAAAAAAQwDcAAAACAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\main.cpp",
+              "RelativeToolTip": "main.cpp",
+              "ViewState": "AgIAABACAAAAAAAAAAAqwBsCAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-06-15T19:34:08.533Z",
               "IsPinned": true,
@@ -76,27 +84,29 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "AStarPathfinder.h",
-              "DocumentMoniker": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\AStarPathfinder.h",
-              "RelativeDocumentMoniker": "AStarPathfinder.h",
-              "ToolTip": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\AStarPathfinder.h",
-              "RelativeToolTip": "AStarPathfinder.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-24T22:57:41.946Z"
+              "DocumentIndex": 1,
+              "Title": "MapLoader.cpp",
+              "DocumentMoniker": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\MapLoader.cpp",
+              "RelativeDocumentMoniker": "MapLoader.cpp",
+              "ToolTip": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\MapLoader.cpp",
+              "RelativeToolTip": "MapLoader.cpp",
+              "ViewState": "AgIAACgAAAAAAAAAAAAmwDQAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-06-24T10:16:54.25Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "MapLoader.h",
-              "DocumentMoniker": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\MapLoader.h",
-              "RelativeDocumentMoniker": "MapLoader.h",
-              "ToolTip": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\MapLoader.h",
-              "RelativeToolTip": "MapLoader.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-24T10:39:11.781Z"
+              "DocumentIndex": 2,
+              "Title": "UIHelper.cpp",
+              "DocumentMoniker": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\UIHelper.cpp",
+              "RelativeDocumentMoniker": "UIHelper.cpp",
+              "ToolTip": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\UIHelper.cpp",
+              "RelativeToolTip": "UIHelper.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-06-22T06:11:04.02Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -106,37 +116,27 @@
               "RelativeDocumentMoniker": "loadMapSelector.cpp",
               "ToolTip": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\loadMapSelector.cpp",
               "RelativeToolTip": "loadMapSelector.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABsAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-24T10:34:09.753Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "loadMapSelector.h",
-              "DocumentMoniker": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\loadMapSelector.h",
-              "RelativeDocumentMoniker": "loadMapSelector.h",
-              "ToolTip": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\loadMapSelector.h",
-              "RelativeToolTip": "loadMapSelector.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-24T10:32:40.431Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "MapLoader.cpp",
-              "DocumentMoniker": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\MapLoader.cpp",
-              "RelativeDocumentMoniker": "MapLoader.cpp",
-              "ToolTip": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\MapLoader.cpp",
-              "RelativeToolTip": "MapLoader.cpp",
-              "ViewState": "AgIAACMAAAAAAAAAAAAgwD8AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-24T10:16:54.25Z"
+              "WhenOpened": "2025-06-24T10:34:09.753Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "HexagonCell.cpp",
+              "DocumentMoniker": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\HexagonCell.cpp",
+              "RelativeDocumentMoniker": "HexagonCell.cpp",
+              "ToolTip": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\HexagonCell.cpp",
+              "RelativeToolTip": "HexagonCell.cpp",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAiwB8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-06-27T00:48:12.769Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "FileSelector.cpp",
               "DocumentMoniker": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\FileSelector.cpp",
               "RelativeDocumentMoniker": "FileSelector.cpp",
@@ -144,11 +144,64 @@
               "RelativeToolTip": "FileSelector.cpp",
               "ViewState": "AgIAALEAAAAAAAAAAAAAALwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-23T06:08:28.148Z"
+              "WhenOpened": "2025-06-23T06:08:28.148Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AStarPathfinder.h",
+              "DocumentMoniker": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\AStarPathfinder.h",
+              "RelativeDocumentMoniker": "AStarPathfinder.h",
+              "ToolTip": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\AStarPathfinder.h",
+              "RelativeToolTip": "AStarPathfinder.h",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAACAAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-06-24T22:57:41.946Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Player.h",
+              "DocumentMoniker": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\Player.h",
+              "RelativeDocumentMoniker": "Player.h",
+              "ToolTip": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\Player.h",
+              "RelativeToolTip": "Player.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-06-27T00:50:56.38Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 8,
+              "Title": "MapLoader.h",
+              "DocumentMoniker": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\MapLoader.h",
+              "RelativeDocumentMoniker": "MapLoader.h",
+              "ToolTip": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\MapLoader.h",
+              "RelativeToolTip": "MapLoader.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-06-24T10:39:11.781Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "loadMapSelector.h",
+              "DocumentMoniker": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\loadMapSelector.h",
+              "RelativeDocumentMoniker": "loadMapSelector.h",
+              "ToolTip": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\loadMapSelector.h",
+              "RelativeToolTip": "loadMapSelector.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-06-24T10:32:40.431Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "FileSelector.h",
               "DocumentMoniker": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\FileSelector.h",
               "RelativeDocumentMoniker": "FileSelector.h",
@@ -157,18 +210,6 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-06-23T05:47:29.324Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "UIHelper.cpp",
-              "DocumentMoniker": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\UIHelper.cpp",
-              "RelativeDocumentMoniker": "UIHelper.cpp",
-              "ToolTip": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\UIHelper.cpp",
-              "RelativeToolTip": "UIHelper.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-22T06:11:04.02Z"
             }
           ]
         }

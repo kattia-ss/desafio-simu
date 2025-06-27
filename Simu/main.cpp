@@ -208,17 +208,24 @@ int main() {
 			grid[r][c].setScreenPosition(c, r, offsetX, offsetY);
 
 			if (!grid[r][c].isWall && !grid[r][c].isStart && !grid[r][c].isGoal && !grid[r][c].isItem) {
-				int minH = 0, maxH = 60; // Ajusta según el máximo de tu mapa
+				int minH = 0, maxH = 60;
 				float ratio = static_cast<float>(grid[r][c].height - minH) / (maxH - minH);
 				ratio = std::clamp(ratio, 0.f, 1.f);
 
-				int rColor = static_cast<int>(20 + 30 * ratio);   // menos rojo
-				int gColor = static_cast<int>(140 + 115 * ratio); // verde más brillante (hasta 255)
-				int bColor = static_cast<int>(20 + 30 * (1 - ratio)); // azul muy tenue
+				// Correccion para transicion mas suave en medio
+				ratio = pow(ratio, 0.85f);
+
+				
+
+				// Color: azul marino a verde esmeralda
+				int rColor = static_cast<int>(20 + 40 * ratio);      // de 20 a 60
+				int gColor = static_cast<int>(40 + 190 * ratio);     // de 40 a 230 a mucho verde arriba
+				int bColor = static_cast<int>(90 - 70 * ratio);      // de 90 a 20 a azul se reduce
 
 				Color cellColor(rColor, gColor, bColor);
 				grid[r][c].setFillColor(cellColor);
 				originalColors[r][c] = cellColor;
+
 			}
 			else {
 				originalColors[r][c] = grid[r][c].getFillColor();
@@ -533,11 +540,11 @@ energyBarFill.setPosition(hudX, energyBarY);
 				for (int c = 0; c < GRID_COLS; ++c) {
 					if (!grid[r][c].isWall && !grid[r][c].isGoal && grid[r][c].height <= waterLevel) {
 						grid[r][c].isFlooded = true;
-						grid[r][c].setFillColor(Color(100, 100, 255, 150));
+						grid[r][c].setFillColor(Color(0, 204, 255));
 					}
 					else if (grid[r][c].isGoal && waterLevel > maxGoalHeight + 2) {
 						grid[r][c].isFlooded = true;
-						grid[r][c].setFillColor(Color(100, 100, 255, 150));
+						grid[r][c].setFillColor(Color(0, 204, 255));
 					}
 				}
 			}
@@ -643,7 +650,7 @@ energyBarFill.setPosition(hudX, energyBarY);
 
 		// Dibujar el jugador
 		CircleShape highlight(HEX_RADIUS / 2.f, 6);
-		highlight.setFillColor(Color(50, 100, 255, 180));
+		highlight.setFillColor(Color(156, 39, 176)); // púrpura oscuro vibrante
 		highlight.setOrigin(highlight.getRadius(), highlight.getRadius());
 		highlight.setPosition(grid[player.row][player.col].getPosition());
 		window.draw(highlight);

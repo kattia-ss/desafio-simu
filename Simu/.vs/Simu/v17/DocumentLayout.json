@@ -64,7 +64,7 @@
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "C:\\Users\\ksant\\OneDrive\\Escritorio\\desafio-simu\\Simu\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAABACAAAAAAAAAAAqwBsCAAApAAAAAAAAAA==",
+              "ViewState": "AgIAAHcAAAAAAAAAAAD4v4IAAABBAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-06-15T19:34:08.533Z",
               "IsPinned": true,
@@ -92,8 +92,7 @@
               "RelativeToolTip": "MapLoader.cpp",
               "ViewState": "AgIAACgAAAAAAAAAAAAmwDQAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-24T10:16:54.25Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-24T10:16:54.25Z"
             },
             {
               "$type": "Document",
@@ -105,8 +104,7 @@
               "RelativeToolTip": "UIHelper.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-22T06:11:04.02Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-22T06:11:04.02Z"
             },
             {
               "$type": "Document",
@@ -118,8 +116,7 @@
               "RelativeToolTip": "loadMapSelector.cpp",
               "ViewState": "AgIAAAwAAAAAAAAAAAAAABsAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-24T10:34:09.753Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-24T10:34:09.753Z"
             },
             {
               "$type": "Document",
@@ -131,8 +128,7 @@
               "RelativeToolTip": "HexagonCell.cpp",
               "ViewState": "AgIAAAQAAAAAAAAAAAAiwB8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-27T00:48:12.769Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-27T00:48:12.769Z"
             },
             {
               "$type": "Document",
@@ -144,8 +140,7 @@
               "RelativeToolTip": "FileSelector.cpp",
               "ViewState": "AgIAALEAAAAAAAAAAAAAALwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-23T06:08:28.148Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-23T06:08:28.148Z"
             },
             {
               "$type": "Document",
@@ -157,8 +152,7 @@
               "RelativeToolTip": "AStarPathfinder.h",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAACAAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-24T22:57:41.946Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-24T22:57:41.946Z"
             },
             {
               "$type": "Document",
@@ -170,8 +164,7 @@
               "RelativeToolTip": "Player.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-27T00:50:56.38Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-27T00:50:56.38Z"
             },
             {
               "$type": "Document",
@@ -183,8 +176,7 @@
               "RelativeToolTip": "MapLoader.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-24T10:39:11.781Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-24T10:39:11.781Z"
             },
             {
               "$type": "Document",
@@ -196,8 +188,7 @@
               "RelativeToolTip": "loadMapSelector.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-24T10:32:40.431Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-24T10:32:40.431Z"
             },
             {
               "$type": "Document",

@@ -125,6 +125,7 @@ int main() {
 		"Explora el templo, evita el agua y alcanza el objetivo final.\n\n"
 		"Controles:\n"
 		"W/E = Arriba Diagonal\nA/D = Izquierda / Derecha\nZ/X = Abajo Diagonal\n\n"
+		"O/L = Zoom In/Out\n\n"
 		"F = Ruta A* | R = Romper muro | M = Modo automático | ESC = Salir"
 	);
 	introText.setPosition(windowWidth / 2 - introText.getLocalBounds().width / 2, 200);

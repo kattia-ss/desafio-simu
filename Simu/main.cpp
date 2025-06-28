@@ -18,6 +18,7 @@
 #include "AStarPathfinder.h"
 #include "UIHelper.h"
 #include "loadMapSelector.h"
+#include <cstdlib>  // rand
 
 
 // #include "FileSelector.h"
@@ -28,9 +29,108 @@ bool loadMapWithValidation(const string& filename, vector<vector<HexagonCell>>& 
 using namespace sf;
 using namespace std;
 
+//burbujas
+vector<CircleShape> bubbles;
+vector<float> bubbleSpeeds;
+Texture coralTexture;
+Sprite coral;
+bool coralLoaded = false;
 
+//pez prron
+vector<CircleShape> fish;
+vector<float> fishSpeed;
+
+//alguien dijo PEZ
+vector<Sprite> fishSprites;
+vector<float> fishSpeeds;
+Texture fishTexture;
+bool fishTextureLoaded = false;
+
+//corales para el mapa
+Sprite coralLeft, coralRight;
+bool coralsDecorReady = false;
+
+//Fondo para el mapa
+VertexArray backgroundQuad(Quads, 4);
+
+//para recoger un item
+struct Particle {
+	Vector2f pos, vel;
+	float life;
+};
+vector<Particle> particles;
+
+
+//efecto al caminar
+struct Ripple {
+	Vector2f position;
+	float radius;
+	float opacity;
+};
+vector<Ripple> ripples;
+
+Texture wallTexture;
+bool wallTextureLoaded = false;
+
+
+
+
+void drawIntroDecorations(RenderWindow& window, float windowWidth, float windowHeight) {
+	// Animar y dibujar burbujas
+	for (size_t i = 0; i < bubbles.size(); ++i) {
+		Vector2f pos = bubbles[i].getPosition();
+		pos.y -= bubbleSpeeds[i];
+		if (pos.y < -10) {
+			pos.y = windowHeight + rand() % 100;
+			pos.x = rand() % static_cast<int>(windowWidth);
+		}
+		bubbles[i].setPosition(pos);
+		window.draw(bubbles[i]);
+	}
+
+	// Dibujar coral una vez
+	if (coralLoaded) {
+		window.draw(coral);
+
+		Sprite coral2 = coral;
+		coral2.setPosition(windowWidth - 150, windowHeight - 130);
+		coral2.setScale(0.4f, 0.4f);
+		window.draw(coral2);
+	}
+
+	//peces prrones (es un triangulo)
+	for (size_t i = 0; i < fish.size(); ++i) {
+		Vector2f pos = fish[i].getPosition();
+		pos.x += fishSpeed[i]; // nadan hacia la derecha
+		if (pos.x > windowWidth + 50) {
+			pos.x = -100;
+			pos.y = 100 + rand() % static_cast<int>(windowHeight - 200);
+		}
+		fish[i].setPosition(pos);
+		window.draw(fish[i]);
+	}
+
+
+	//pez bonito obvio
+	if (fishTextureLoaded) {
+		for (size_t i = 0; i < fishSprites.size(); ++i) {
+			Vector2f pos = fishSprites[i].getPosition();
+			pos.x += fishSpeeds[i];
+			if (pos.x > windowWidth + 50) {
+				pos.x = -100;
+				pos.y = 100 + rand() % static_cast<int>(windowHeight - 200);
+			}
+			fishSprites[i].setPosition(pos);
+			window.draw(fishSprites[i]);
+		}
+	}
+
+
+}
 
 int main() {
+
+	
 
 	//Para resolver automaticamente
 	bool showStartScreen = true;
@@ -58,12 +158,96 @@ int main() {
 	RenderWindow window(VideoMode::getDesktopMode(), "Templo", Style::Fullscreen);
 	window.setFramerateLimit(60);
 
+
+
 	float windowWidth = window.getSize().x;
 	float windowHeight = window.getSize().y;
+
+	backgroundQuad[0].position = Vector2f(0, 0);
+	backgroundQuad[1].position = Vector2f(windowWidth, 0);
+	backgroundQuad[2].position = Vector2f(windowWidth, windowHeight);
+	backgroundQuad[3].position = Vector2f(0, windowHeight);
+
+	// Colores del gradiente (top ? bottom)
+	backgroundQuad[0].color = Color(10, 20, 40);   // azul profundo arriba izquierda
+	backgroundQuad[1].color = Color(10, 20, 40);   // azul profundo arriba derecha
+	backgroundQuad[2].color = Color(20, 180, 140); // verde esmeralda abajo derecha
+	backgroundQuad[3].color = Color(20, 180, 140); // verde esmeralda abajo izquierda
+
 
 	View view(FloatRect(0, 0, windowWidth, windowHeight));
 	view.setCenter(windowWidth / 2, windowHeight / 2);
 	window.setView(view);
+
+	//esto es despues de crear la ventana
+	
+
+
+	// Inicializar burbujas
+	for (int i = 0; i < 30; ++i) {
+		CircleShape bubble(rand() % 5 + 2);
+		bubble.setFillColor(Color(200, 255, 255, 100)); // semitransparente
+		bubble.setPosition(rand() % (int)windowWidth, windowHeight + rand() % 400);
+		bubbles.push_back(bubble);
+		bubbleSpeeds.push_back(0.3f + static_cast<float>(rand() % 100) / 300.f);
+	}
+	if (coralTexture.loadFromFile("assets/coral.png")) {
+		coral.setTexture(coralTexture);
+		coral.setScale(0.5f, 0.5f); // ajustá según tamaño original
+		coral.setPosition(60, windowHeight - 140); // esquina inferior izquierda
+		coral.setColor(Color::White); 
+		coralLoaded = true;
+	}
+	if (coralLoaded) {
+		coralLeft = coral;
+		coralLeft.setScale(0.5f, 0.5f);
+		coralLeft.setPosition(50, windowHeight - 150);
+
+		coralRight = coral;
+		coralRight.setScale(-0.5f, 0.5f); // reflejado horizontalmente
+		coralRight.setPosition(windowWidth - 150, windowHeight - 150);
+
+		coralsDecorReady = true;
+	}
+	else {
+		cerr << "No se pudo cargar assets/coral.png\n";
+	}
+
+	if (fishTexture.loadFromFile("assets/fish1.png")) {
+		fishTextureLoaded = true;
+
+		// Crear múltiples peces
+		for (int i = 0; i < 5; ++i) {
+			Sprite fish(fishTexture);
+			fish.setScale(0.2f + static_cast<float>(rand() % 10) / 50.f, 0.2f); // escalado variado
+			float y = 100 + rand() % static_cast<int>(windowHeight - 200);
+			fish.setPosition(-rand() % 300, y);
+			fishSprites.push_back(fish);
+			fishSpeeds.push_back(0.4f + static_cast<float>(rand() % 100) / 200.f);
+		}
+	}
+	else {
+		cerr << "? No se pudo cargar assets/fish1.png\n";
+	}
+
+	
+
+
+
+	//pez
+	// Crear peces simples (forma triangular)
+	for (int i = 0; i < 5; ++i) {
+		CircleShape f(6, 3); // forma de triángulo
+		f.setFillColor(Color(100 + rand() % 156, 100 + rand() % 156, rand() % 100)); //color arcoirs
+		f.setScale(1.0f + rand() % 3 / 5.f, 1.0f);
+		float y = 100 + rand() % static_cast<int>(windowHeight - 200);
+		f.setPosition(-rand() % 300, y);
+		f.setRotation(90); // apuntar hacia la derecha
+		fish.push_back(f);
+		fishSpeed.push_back(0.3f + static_cast<float>(rand() % 100) / 300.f);
+	}
+
+
 
 	
 	// HUD retro visual.......................................................
@@ -109,41 +293,42 @@ int main() {
 		return -1;
 	}
 
+
+	bool esperandoInicio = true;
 	// Pantalla de bienvenida
 	Text introTitle, introText, introHint;
-	introTitle.setFont(font);
-	introTitle.setCharacterSize(24);
-	introTitle.setFillColor(Color::Yellow);
-	introTitle.setString("TEMPLO - Aventura Hexagonal");
-	introTitle.setPosition(windowWidth / 2 - introTitle.getLocalBounds().width / 2, 100);
+	
+	
 
+	// Título en turquesa brillante
+	introTitle.setFont(font);
+	introTitle.setCharacterSize(28);
+	introTitle.setFillColor(Color(64, 224, 208)); // Turquesa
+	introTitle.setString("TEMPLO ABISAL");
+	introTitle.setPosition(windowWidth / 2 - introTitle.getLocalBounds().width / 2, 80);
+
+	// Texto blanco con matices oceánicos
 	introText.setFont(font);
 	introText.setCharacterSize(16);
-	introText.setFillColor(Color::White);
+	introText.setFillColor(Color(200, 255, 255));  // Azul claro
 	introText.setLineSpacing(1.5f);
 	introText.setString(
-		"Explora el templo, evita el agua y alcanza el objetivo final.\n\n"
+		"Desciende al templo sumergido, evita la inundación\n"
+		"y encuentra la salida antes de que el abismo te consuma.\n\n"
 		"Controles:\n"
-		"W/E = Arriba Diagonal\nA/D = Izquierda / Derecha\nZ/X = Abajo Diagonal\n\n"
-		"O/L = Zoom In/Out\n\n"
-		"F = Ruta A* | R = Romper muro | M = Modo automático | ESC = Salir"
+		"W/E = Arriba Diagonal | A/D = Izquierda/Derecha\n"
+		"Z/X = Abajo Diagonal | O/L = Zoom In/Out\n"
+		"F = Ruta A* | R = Romper muro | M = Automático | ESC = Salir"
 	);
-	introText.setPosition(windowWidth / 2 - introText.getLocalBounds().width / 2, 200);
+	introText.setPosition(windowWidth / 2 - introText.getLocalBounds().width / 2, 160);
 
+	// Texto inferior
 	introHint.setFont(font);
 	introHint.setCharacterSize(14);
-	introHint.setFillColor(Color(180, 180, 180));
-	introHint.setString("Presiona ESPACIO para comenzar...");
-	introHint.setPosition(windowWidth / 2 - introHint.getLocalBounds().width / 2, 500);
+	introHint.setFillColor(Color(180, 220, 250));
+	introHint.setString("Haz CLICK y luego presiona ESPACIO para sumergirte...");
+	introHint.setPosition(windowWidth / 2 - introHint.getLocalBounds().width / 2, windowHeight - 100);
 
-	window.clear(Color::Black);
-	window.draw(introTitle);
-	window.draw(introText);
-	window.draw(introHint);
-	window.display();
-
-	// Esperar ESPACIO para comenzar
-	bool esperandoInicio = true;
 	while (esperandoInicio) {
 		Event e;
 		while (window.pollEvent(e)) {
@@ -152,6 +337,14 @@ int main() {
 			if (e.type == Event::KeyPressed && e.key.code == Keyboard::Space)
 				esperandoInicio = false;
 		}
+
+		// Redibujar cada frame
+		window.clear(Color(10, 20, 40));
+		drawIntroDecorations(window, windowWidth, windowHeight);
+		window.draw(introTitle);
+		window.draw(introText);
+		window.draw(introHint);
+		window.display();
 	}
 
 	// Opcional: limpiar terminal al comenzar
@@ -193,6 +386,8 @@ int main() {
 				player.row = r;
 				player.col = c;
 				startFound = true;
+				Vector2f ripplePos = grid[player.row][player.col].getPosition();
+				ripples.push_back({ ripplePos, 5.f, 255.f });
 				break;
 			}
 		}
@@ -214,29 +409,25 @@ int main() {
 		for (int c = 0; c < GRID_COLS; ++c) {
 			grid[r][c].setScreenPosition(c, r, offsetX, offsetY);
 
-			if (!grid[r][c].isWall && !grid[r][c].isStart && !grid[r][c].isGoal && !grid[r][c].isItem) {
+			bool esCeldaNormal = !grid[r][c].isWall && !grid[r][c].isStart &&
+				!grid[r][c].isGoal && !grid[r][c].isItem;
+
+			if (esCeldaNormal) {
 				int minH = 0, maxH = 60;
 				float ratio = static_cast<float>(grid[r][c].height - minH) / (maxH - minH);
 				ratio = std::clamp(ratio, 0.f, 1.f);
-
-				// Correccion para transicion mas suave en medio
 				ratio = pow(ratio, 0.85f);
 
-				
-
-				// Color: azul marino a verde esmeralda
-				int rColor = static_cast<int>(20 + 40 * ratio);      // de 20 a 60
-				int gColor = static_cast<int>(40 + 190 * ratio);     // de 40 a 230 a mucho verde arriba
-				int bColor = static_cast<int>(90 - 70 * ratio);      // de 90 a 20 a azul se reduce
+				int rColor = static_cast<int>(20 + 40 * ratio);
+				int gColor = static_cast<int>(40 + 190 * ratio);
+				int bColor = static_cast<int>(90 - 70 * ratio);
 
 				Color cellColor(rColor, gColor, bColor);
 				grid[r][c].setFillColor(cellColor);
-				originalColors[r][c] = cellColor;
+			}
 
-			}
-			else {
-				originalColors[r][c] = grid[r][c].getFillColor();
-			}
+			originalColors[r][c] = grid[r][c].getFillColor();
+
 		}
 	}
 
@@ -450,11 +641,24 @@ energyBarFill.setPosition(hudX, energyBarY);
 								grid[newRow][newCol].itemCollected = true;
 								grid[newRow][newCol].isItem = false;
 								grid[newRow][newCol].setFillColor(Color::White);
+								Vector2f itemPos = grid[newRow][newCol].getPosition();
+								for (int i = 0; i < 10; ++i) {
+									float angle = (rand() % 360) * 3.14159f / 180.f;
+									float speed = 1.5f + rand() % 30 / 10.f;
+									particles.push_back({
+										itemPos,
+										Vector2f(cos(angle) * speed, sin(angle) * speed),
+										255.f
+										});
+								}
+
 								cout << "?? ¡ITEM RECOGIDO! +100 puntos. Puntuacion: " << score << endl;
 							}
 
 							player.row = newRow;
 							player.col = newCol;
+							Vector2f ripplePos = grid[player.row][player.col].getPosition();
+							ripples.push_back({ ripplePos, 5.f, 255.f });
 
 							if (grid[newRow][newCol].isGoal) {
 								cout << "\n?? ¡GANASTE! ??" << endl;
@@ -478,7 +682,16 @@ energyBarFill.setPosition(hudX, energyBarY);
 						wallBreakUsed = true;
 						grid[nr][nc].isWall = false;
 						grid[nr][nc].setFillColor(Color::White);
-
+						Vector2f breakPos = grid[nr][nc].getPosition();
+						for (int i = 0; i < 15; ++i) {
+							float angle = (rand() % 360) * 3.14159f / 180.f;
+							float speed = 1.0f + rand() % 40 / 10.f;
+							particles.push_back({
+								breakPos,
+								Vector2f(cos(angle) * speed, sin(angle) * speed),
+								255.f
+								});
+						}
 						energy = 0;
 						// Establecer altura alta para que se inunde
 						int goalHeight = 0;
@@ -563,7 +776,6 @@ energyBarFill.setPosition(hudX, energyBarY);
 			cout << "Puntuación final: " << score << " puntos" << endl;
 			cout << "Celdas visitadas: " << visited.size() << endl;
 			cout << "Causa: El agua te alcanzó" << endl;
-			window.setView(window.getDefaultView());
 			showEndScreen(window, "GAME OVER", font);
 		}
 
@@ -632,7 +844,46 @@ energyBarFill.setPosition(hudX, energyBarY);
 			}
 		}
 
-		window.clear(Color(60, 60, 60));
+		window.setView(window.getDefaultView()); // UI y decoraciones fijas a pantalla
+		//para que tenga algo bonito
+		window.clear(); // sin color
+		window.draw(backgroundQuad);
+
+		// Dibujar burbujas animadas
+		for (size_t i = 0; i < bubbles.size(); ++i) {
+			Vector2f pos = bubbles[i].getPosition();
+			pos.y -= bubbleSpeeds[i];
+			if (pos.y < -10) {
+				pos.y = window.getSize().y + rand() % 100;
+				pos.x = rand() % (int)window.getSize().x;
+			}
+			bubbles[i].setPosition(pos);
+			window.draw(bubbles[i]);
+		}
+
+		//poner corales
+		if (coralsDecorReady) {
+			window.draw(coralLeft);
+			window.draw(coralRight);
+		}
+
+		//poner peces bonitos
+		if (fishTextureLoaded) {
+			for (size_t i = 0; i < fishSprites.size(); ++i) {
+				Vector2f pos = fishSprites[i].getPosition();
+				pos.x += fishSpeeds[i];
+				if (pos.x > windowWidth + 50) {
+					pos.x = -100;
+					pos.y = 100 + rand() % static_cast<int>(windowHeight - 200);
+				}
+				fishSprites[i].setPosition(pos);
+				window.draw(fishSprites[i]);
+			}
+		}
+
+		window.setView(view); // volver a la vista con zoom
+		
+
 
 		// Dibujar la cuadrícula primero
 		for (int r = 0; r < GRID_ROWS; ++r) {
@@ -661,6 +912,34 @@ energyBarFill.setPosition(hudX, energyBarY);
 		highlight.setOrigin(highlight.getRadius(), highlight.getRadius());
 		highlight.setPosition(grid[player.row][player.col].getPosition());
 		window.draw(highlight);
+
+		// Dibujar ondas **después**
+		for (auto& r : ripples) {
+			CircleShape ring(r.radius);
+			ring.setOrigin(r.radius, r.radius);
+			ring.setPosition(r.position);
+			ring.setFillColor(Color::Transparent);
+			ring.setOutlineThickness(2);
+			ring.setOutlineColor(Color(0, 255, 255, static_cast<Uint8>(r.opacity)));
+			window.draw(ring);
+
+			r.radius += 1.5f;
+			r.opacity -= 4.f;
+		}
+		ripples.erase(remove_if(ripples.begin(), ripples.end(),
+			[](const Ripple& r) { return r.opacity <= 0.f; }), ripples.end());
+
+		for (auto& p : particles) {
+			CircleShape spark(2);
+			spark.setPosition(p.pos);
+			spark.setFillColor(Color(255, 255, 0, static_cast<Uint8>(p.life)));
+			window.draw(spark);
+
+			p.pos += p.vel;
+			p.life -= 3.f;
+		}
+		particles.erase(remove_if(particles.begin(), particles.end(),
+			[](const Particle& p) { return p.life <= 0.f; }), particles.end());
 
 		// Dibujar la barra de energía
 		energyBarFill.setSize(Vector2f(120 * (static_cast<float>(energy) / MAX_ENERGY), 12));

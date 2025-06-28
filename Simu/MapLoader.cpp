@@ -55,7 +55,7 @@ bool loadMapFromJson(const string& filename, vector<vector<HexagonCell>>& grid) 
                     cell.isItem = true;
                     break;
                 case '#':
-                    cell.setFillColor(Color(243, 141, 60));
+                    cell.setFillColor(Color(90, 90, 100));
                     cell.isWall = true;
                     break;
                 case '.':
